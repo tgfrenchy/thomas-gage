@@ -7,246 +7,266 @@
 <link href="https://fonts.googleapis.com/css2?family=PT+Mono&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230d1117'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='Georgia,serif' font-size='16' font-weight='700' fill='%23EF9F27'>T</text></svg>">
 <style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg:#0d1117; --surface:#161b22; --border:#21262d;
-  --amber:#EF9F27; --amber-dim:#BA7517; --amber-bg:#1c1a14; --amber-bdr:#2d2011;
-  --purple:#7F77DD; --purple-bdr:#2a2640;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d1117;--surface:#161b22;--border:#21262d;
+  --amber:#EF9F27;--amber-dim:#BA7517;--amber-bg:#1c1a14;--amber-bdr:#2d2011;
+  --purple:#7F77DD;--purple-bdr:#2a2640;
   --blue:#58a6ff;
-  --text-pri:#e6edf3; --text-mid:#c9d1d9; --text-mut:#8b949e;
-  --nav-w: 220px;
+  --text-pri:#e6edf3;--text-mid:#c9d1d9;--text-mut:#8b949e;
+  --nav-w:220px;--nav-compact-w:48px;
 }
-html { scroll-behavior: smooth; }
-body { background:var(--bg); color:var(--text-mid); font-family:'Inter',sans-serif; font-size:14px; line-height:1.6; min-height:100vh; display:flex; }
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text-mid);font-family:'Inter',sans-serif;font-size:14px;line-height:1.6;min-height:100vh;display:flex}
 
-/* ══ SIDEBAR ══════════════════════════════════════════════════════════════════ */
-.sidebar {
-  position:fixed; top:0; left:0; height:100vh; width:var(--nav-w);
-  background:var(--surface); border-right:1px solid var(--border);
-  display:flex; flex-direction:column; padding:28px 16px;
-  z-index:100; transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);
+/* ══ SIDEBAR ══════════════════════════════════════════════════════════════ */
+.sidebar{position:fixed;top:0;left:0;height:100vh;width:var(--nav-w);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:28px 0;z-index:100;transition:transform 0.3s cubic-bezier(0.4,0,0.2,1),width 0.3s cubic-bezier(0.4,0,0.2,1);overflow:hidden}
+.sidebar.collapsed{transform:translateX(calc(-1 * var(--nav-w)))}
+.sidebar.compact{width:var(--nav-compact-w)}
+.sidebar.compact.collapsed{transform:translateX(calc(-1 * var(--nav-compact-w)))}
+.sidebar-inner{display:flex;flex-direction:column;height:100%;width:var(--nav-w);padding:0 16px}
+.sidebar-wordmark{font-family:'PT Mono',monospace;font-size:12px;color:var(--text-mut);letter-spacing:0.05em;margin-bottom:28px;padding:0 8px;white-space:nowrap}
+.sidebar-wordmark strong{color:var(--text-pri)}
+.sidebar-section-label{font-family:'PT Mono',monospace;font-size:9px;color:var(--text-mut);letter-spacing:0.12em;text-transform:uppercase;padding:0 8px;margin-bottom:4px;white-space:nowrap}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:6px;font-size:12px;font-family:'PT Mono',monospace;color:var(--text-mut);cursor:pointer;border:none;background:transparent;text-align:left;text-decoration:none;width:100%;transition:background 0.15s,color 0.15s;white-space:nowrap}
+.nav-item:hover{background:rgba(255,255,255,0.04);color:var(--text-mid)}
+.nav-item.active{background:rgba(239,159,39,0.08);color:var(--amber)}
+.nav-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.nav-dot-resume{background:var(--amber)}
+.nav-dot-cover{background:var(--purple)}
+.nav-dot-approach{background:var(--blue)}
+.nav-key{margin-left:auto;font-size:9px;color:var(--text-mut);background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:1px 4px;flex-shrink:0}
+.nav-item.active .nav-key{border-color:var(--amber-bdr);color:var(--amber-dim)}
+.nav-divider{height:1px;background:var(--border);margin:10px 16px;flex-shrink:0}
+.sidebar-hints{font-family:'PT Mono',monospace;font-size:10px;color:var(--text-mut);padding:0 24px;line-height:2;white-space:nowrap}
+.sidebar-hints kbd{font-family:'PT Mono',monospace;font-size:9px;background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:1px 4px}
+.sidebar-bottom{margin-top:auto;padding:0 24px;font-family:'PT Mono',monospace;font-size:10px;color:var(--border);line-height:1.8;white-space:nowrap}
+.sidebar.compact .sidebar-wordmark,.sidebar.compact .sidebar-section-label,.sidebar.compact .nav-key,.sidebar.compact .sidebar-hints,.sidebar.compact .sidebar-bottom,.sidebar.compact .nav-item-label{display:none}
+.sidebar.compact .nav-item{justify-content:center;padding:10px 0;width:100%;border-radius:0}
+.sidebar.compact .nav-divider{margin:6px 8px}
+.sidebar-scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:99;opacity:0;transition:opacity 0.3s ease}
+.sidebar-toggle{position:fixed;top:16px;left:16px;z-index:200;width:36px;height:36px;border-radius:8px;background:var(--surface);border:1px solid var(--border);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:left 0.3s cubic-bezier(0.4,0,0.2,1),background 0.15s,border-color 0.15s;box-shadow:0 2px 12px rgba(0,0,0,0.4)}
+.sidebar-toggle:hover{background:var(--amber);border-color:var(--amber)}
+.sidebar-toggle:hover svg rect{fill:#0d1117}
+body.nav-open .sidebar-toggle{left:calc(var(--nav-w) + 12px)}
+body.nav-compact .sidebar-toggle{left:calc(var(--nav-compact-w) + 12px)}
+
+/* ══ PILL ══════════════════════════════════════════════════════════════════ */
+.pill-wrap{position:fixed;top:20px;right:24px;z-index:200}
+.pill{display:flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:7px 14px;font-family:'PT Mono',monospace;font-size:11px;color:var(--text-mut);cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,0.5);transition:border-color 0.2s,box-shadow 0.2s,transform 0.18s cubic-bezier(0.34,1.56,0.64,1);animation:pillFade 0.5s ease 0.2s both;user-select:none}
+.pill:hover:not(.firing){border-color:var(--amber-bdr);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,0.6)}
+.pill:active:not(.firing){transform:scale(0.96)}
+.pill.firing{cursor:default;opacity:0.6;pointer-events:none}
+.pill-dot{width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 6px var(--amber);animation:pulse 2.4s ease-in-out infinite;flex-shrink:0}
+#confetti-canvas{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:999}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+@keyframes pillFade{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ══ MAIN ══════════════════════════════════════════════════════════════════ */
+.main{flex:1;margin-left:var(--nav-w);transition:margin-left 0.3s cubic-bezier(0.4,0,0.2,1)}
+body:not(.nav-open):not(.nav-compact) .main{margin-left:0}
+body.nav-compact .main{margin-left:var(--nav-compact-w)}
+.doc-panel{display:none;max-width:794px;margin:0 auto;padding:88px 48px 64px}
+.doc-panel.active{display:block}
+
+/* ══ FADE-UP ═══════════════════════════════════════════════════════════════ */
+.fade-up{opacity:0;transform:translateY(20px);transition:opacity 0.32s ease,transform 0.32s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+
+/* ══ RESUME ════════════════════════════════════════════════════════════════ */
+.eyebrow{font-family:'PT Mono',monospace;font-size:11px;letter-spacing:0.08em;margin-bottom:8px}
+.eyebrow-role{color:var(--amber)}
+.eyebrow-dept{color:var(--text-mid)}
+.name{font-size:30px;font-weight:700;color:var(--text-pri);letter-spacing:-0.02em;line-height:1.15;margin-bottom:10px}
+.tagline{font-size:14px;color:var(--text-mid);line-height:1.65;margin-bottom:18px;max-width:580px}
+.contacts{display:flex;gap:24px;flex-wrap:wrap;align-items:center}
+.contact{font-family:'PT Mono',monospace;font-size:12px;color:var(--blue);text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.contact-icon{width:14px;height:14px;flex-shrink:0;opacity:0.5;transition:opacity 0.15s,color 0.15s}
+.contact-copy{cursor:pointer;position:relative}
+.contact-copy:hover{color:var(--amber)}
+.contact-copy:hover .contact-icon{opacity:1;color:var(--amber)}
+.contact-copied{display:none;position:absolute;top:-26px;left:50%;transform:translateX(-50%);background:var(--amber);color:var(--bg);font-size:10px;padding:2px 8px;border-radius:4px;white-space:nowrap;pointer-events:none;font-family:'PT Mono',monospace}
+.contact-copy.copied .contact-label{opacity:0.5}
+.contact-copy.copied .contact-copied{display:block;animation:copiedFade 1.4s ease forwards}
+@keyframes copiedFade{0%{opacity:1;transform:translateX(-50%) translateY(0)}70%{opacity:1}100%{opacity:0;transform:translateX(-50%) translateY(-6px)}}
+.contact-link:hover{color:var(--blue)}
+.contact-link:hover .contact-icon{opacity:1}
+a:not(.contact):not(.nav-item){color:var(--blue);text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(88,166,255,0.4);transition:text-decoration-color 0.15s}
+a:not(.contact):not(.nav-item):hover{text-decoration-color:var(--blue)}
+.section{margin-top:36px}
+.section-head{font-family:'PT Mono',monospace;font-size:10px;color:var(--amber);letter-spacing:0.1em;text-transform:uppercase;padding-bottom:8px;border-bottom:1px solid var(--amber-bdr);margin-bottom:16px}
+.profile-text{font-size:13px;color:var(--text-mid);line-height:1.8}
+.strengths-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.strength-card{background:var(--surface);border:1px solid var(--purple-bdr);border-top:2px solid var(--purple);border-radius:8px;padding:14px;cursor:pointer;transition:transform 0.22s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.22s ease,border-color 0.22s ease}
+.strength-card:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,0.4),0 0 0 1px var(--purple),0 0 20px rgba(127,119,221,0.12);border-color:var(--purple)}
+.strength-header{display:flex;align-items:center;justify-content:space-between}
+.strength-label{font-size:13px;font-weight:600;color:var(--text-pri)}
+.strength-toggle{font-size:14px;color:var(--purple);opacity:0.5;transition:transform 0.22s ease,opacity 0.2s;flex-shrink:0}
+.strength-card.open .strength-toggle{transform:rotate(45deg);opacity:1}
+.strength-body{overflow:hidden;max-height:0;transition:max-height 0.28s ease,opacity 0.22s ease,margin-top 0.22s ease;opacity:0}
+.strength-card.open .strength-body{max-height:120px;opacity:1;margin-top:8px}
+.strength-skills{font-family:'PT Mono',monospace;font-size:11px;color:var(--text-mid);line-height:1.8}
+.impact-card{background:var(--amber-bg);border:1px solid var(--amber-bdr);border-radius:8px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.bullet{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--text-mid);line-height:1.65}
+.bullet-mark{color:var(--amber-dim);flex-shrink:0;line-height:1.65;font-size:12px;user-select:none}
+.job{display:flex;flex-direction:column;gap:4px}
+.job+.job{margin-top:16px;padding-top:16px;border-top:1px solid rgba(33,38,45,0.6)}
+.job-header{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.job-title{font-size:14px;font-weight:600;color:var(--text-pri)}
+.job-dates{font-family:'PT Mono',monospace;font-size:11px;color:var(--text-mid);white-space:nowrap;flex-shrink:0}
+.job-co{font-size:12px;color:var(--blue)}
+.job-toggle{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-family:'PT Mono',monospace;font-size:10px;color:var(--text-mut);cursor:pointer;background:none;border:1px solid var(--border);border-radius:4px;padding:6px 12px;transition:color 0.15s,border-color 0.15s,background 0.15s;letter-spacing:0.04em;min-height:36px;-webkit-tap-highlight-color:transparent}
+.job-toggle:hover{color:var(--amber);border-color:var(--amber-bdr);background:rgba(239,159,39,0.06)}
+.job-toggle-icon{font-size:12px;transition:transform 0.22s ease}
+.job.open .job-toggle-icon{transform:rotate(45deg)}
+.job-toggle-label-more{display:inline}
+.job-toggle-label-less{display:none}
+.job.open .job-toggle-label-more{display:none}
+.job.open .job-toggle-label-less{display:inline}
+.job-detail{overflow:hidden;max-height:0;transition:max-height 0.3s ease,opacity 0.25s ease,margin-top 0.25s ease;opacity:0}
+.job.open .job-detail{max-height:600px;opacity:1;margin-top:6px}
+.job-desc{font-size:12px;color:var(--text-mid);line-height:1.7;margin-bottom:6px}
+.job-bullets,.plain-bullets{display:flex;flex-direction:column;gap:4px}
+.arts-title{font-size:13px;font-weight:600;color:var(--text-pri)}
+.arts-co{font-size:12px;color:var(--blue);margin:2px 0 6px}
+.arts-text{font-size:12px;color:var(--text-mid);line-height:1.75}
+.bottom-row{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start}
+.tools-text{font-family:'PT Mono',monospace;font-size:11px;color:var(--text-mid);line-height:1.9}
+.footer-note{margin-top:40px;font-family:'PT Mono',monospace;font-size:11px;color:var(--text-mut);text-align:center;padding-top:20px;border-top:1px solid var(--border)}
+
+/* ══ COVER LETTER ══════════════════════════════════════════════════════════ */
+.cover-meta{margin-bottom:2.5rem}
+.cover-meta-date{font-family:'PT Mono',monospace;font-size:11px;color:var(--text-mut);margin-bottom:1.5rem}
+.cover-addressee{font-size:13px;color:var(--text-mid);line-height:1.7;margin-bottom:0.25rem}
+.cover-addressee strong{color:var(--text-pri)}
+.cover-salutation{font-size:15px;color:var(--text-pri);margin-top:1.5rem;font-weight:600}
+.cover-body{font-size:14px;color:var(--text-mid);line-height:1.9}
+.cover-body p{margin-bottom:1.15rem}
+.cover-body p:last-child{margin-bottom:0}
+/* Scroll fade: whole body fades in as one */
+.cover-body{opacity:0;transform:translateY(16px);transition:opacity 0.5s ease,transform 0.5s ease}
+.cover-body.visible{opacity:1;transform:translateY(0)}
+/* Bold highlights in cover letter */
+.cover-body strong{color:var(--text-pri);font-weight:600}
+.cover-sign{margin-top:2.5rem}
+.cover-sign-close{font-size:14px;color:var(--text-mid);margin-bottom:0.75rem}
+.cover-sign-name{font-size:18px;font-weight:700;color:var(--text-pri);letter-spacing:-0.01em}
+.cover-sign-title{font-size:12px;font-family:'PT Mono',monospace;color:var(--text-mut);margin-top:4px}
+/* Footer nav links */
+.footer-nav{display:flex;justify-content:center;gap:20px;margin-bottom:12px;flex-wrap:wrap}
+.footer-nav-link{font-family:'PT Mono',monospace;font-size:11px;background:none;border:none;cursor:pointer;padding:4px 0;transition:color 0.15s;text-decoration:none;display:inline-flex;align-items:center;gap:5px}
+.footer-nav-link-resume{color:var(--amber)}
+.footer-nav-link-resume:hover:not(.current){color:#f5b84a}
+.footer-nav-link-cover{color:var(--purple)}
+.footer-nav-link-cover:hover:not(.current){color:#a39fe8}
+.footer-nav-link-approach{color:var(--blue)}
+.footer-nav-link-approach:hover:not(.current){color:#7ab8ff}
+/* Current panel — plain muted text, not a link */
+.footer-nav-link.current{color:var(--text-mut);cursor:default;pointer-events:none}
+.footer-nav-link.current .footer-nav-dot{opacity:0.4}
+.footer-nav-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.footer-nav-dot-resume{background:var(--amber)}
+.footer-nav-dot-cover{background:var(--purple)}
+.footer-nav-dot-approach{background:var(--blue)}
+
+/* ══ APPROACH ══════════════════════════════════════════════════════════════ */
+.approach-panel{display:none;padding:0 !important;max-width:none !important}
+.approach-panel.active{display:block}
+.approach-wrap{max-width:794px;margin:0 auto;padding:88px 48px 64px}
+
+/* Mobile dropdown selector */
+.approach-dropdown-wrap{display:none;margin-bottom:2rem}
+.approach-dropdown{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--text-mid);font-family:'PT Mono',monospace;font-size:12px;padding:10px 14px;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238b949e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center}
+
+/* Desktop split layout */
+.approach-layout{display:flex;gap:0;min-height:60vh}
+.approach-sidenav{width:200px;flex-shrink:0;border-right:1px solid var(--border);padding-right:0;margin-right:48px}
+.approach-sidenav-inner{position:sticky;top:88px}
+.approach-nav-label{font-family:'PT Mono',monospace;font-size:9px;color:var(--text-mut);letter-spacing:0.12em;text-transform:uppercase;padding:0 0 8px;display:block}
+.approach-nav-item{display:flex;align-items:flex-start;gap:10px;padding:7px 12px 7px 0;cursor:pointer;border:none;background:transparent;text-align:left;width:100%;border-left:2px solid transparent;padding-left:12px;transition:background 0.12s,border-color 0.12s;border-radius:0 4px 4px 0}
+.approach-nav-item:hover{background:rgba(255,255,255,0.03)}
+.approach-nav-item.active{border-left-color:var(--blue);background:rgba(88,166,255,0.06)}
+.approach-nav-num{font-family:'PT Mono',monospace;font-size:11px;color:var(--blue);opacity:0.6;flex-shrink:0;padding-top:1px;min-width:20px}
+.approach-nav-item.active .approach-nav-num{opacity:1}
+.approach-nav-title{font-family:'PT Mono',monospace;font-size:11px;color:var(--text-mut);line-height:1.4}
+.approach-nav-item.active .approach-nav-title{color:var(--text-mid)}
+.approach-content{flex:1;min-width:0}
+.approach-eyebrow{font-family:'PT Mono',monospace;font-size:10px;color:var(--blue);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px}
+.approach-title{font-size:22px;font-weight:700;color:var(--text-pri);line-height:1.25;margin-bottom:1.25rem}
+.approach-body{font-size:14px;color:var(--text-mid);line-height:1.85}
+.approach-body p+p{margin-top:1rem}
+.approach-footer{display:flex;justify-content:space-between;align-items:center;margin-top:2.5rem;padding-top:1.25rem;border-top:1px solid var(--border)}
+.approach-nav-btn{font-family:'PT Mono',monospace;font-size:11px;color:var(--text-mut);background:none;border:1px solid var(--border);border-radius:4px;padding:6px 12px;cursor:pointer;transition:color 0.15s,border-color 0.15s;min-height:36px;-webkit-tap-highlight-color:transparent}
+.approach-nav-btn:hover{color:var(--blue);border-color:var(--blue)}
+.approach-nav-btn:disabled{opacity:0.2;cursor:default}
+.approach-progress{font-family:'PT Mono',monospace;font-size:10px;color:var(--text-mut)}
+
+.coming-soon{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;gap:16px;text-align:center}
+.coming-soon-label{font-family:'PT Mono',monospace;font-size:11px;color:var(--amber);letter-spacing:0.1em;text-transform:uppercase}
+.coming-soon-title{font-size:22px;font-weight:700;color:var(--text-pri)}
+.coming-soon-sub{font-size:13px;color:var(--text-mut);max-width:320px;line-height:1.7}
+
+/* ══ MOBILE ════════════════════════════════════════════════════════════════ */
+@media(max-width:680px){
+  :root{--nav-w:260px}
+  .sidebar{z-index:300;box-shadow:4px 0 24px rgba(0,0,0,0.6)}
+  body.nav-open .sidebar-toggle{left:16px}
+  body.nav-compact .sidebar-toggle{left:16px}
+  body.nav-open .sidebar-scrim{display:block;opacity:1}
+  .sidebar-hints{display:none}
+  .main{margin-left:0 !important}
+  .doc-panel{padding:88px 20px 48px}
+  .pill{padding:6px 10px;font-size:10px}
+  .pill-label-text{display:none}
+  .strengths-grid{grid-template-columns:repeat(2,1fr)}
+  .bottom-row{grid-template-columns:1fr;gap:24px}
+  .job-header{flex-wrap:wrap;gap:2px}
+  .job-dates{font-size:10px}
+  .name{font-size:24px}
+  .tagline{font-size:13px}
+  /* Approach mobile */
+  .approach-wrap{padding:88px 20px 48px}
+  .approach-dropdown-wrap{display:block}
+  .approach-layout{flex-direction:column}
+  .approach-sidenav{display:none}
 }
-.sidebar.collapsed { transform:translateX(calc(-1 * var(--nav-w))); }
-.sidebar-wordmark { font-family:'PT Mono',monospace; font-size:12px; color:var(--text-mut); letter-spacing:0.05em; margin-bottom:28px; padding:0 8px; }
-.sidebar-wordmark strong { color:var(--text-pri); }
-.sidebar-section-label { font-family:'PT Mono',monospace; font-size:9px; color:var(--text-mut); letter-spacing:0.12em; text-transform:uppercase; padding:0 8px; margin-bottom:4px; }
-.nav-item { display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:6px; font-size:12px; font-family:'PT Mono',monospace; color:var(--text-mut); cursor:pointer; border:none; background:transparent; text-align:left; text-decoration:none; width:100%; transition:background 0.15s, color 0.15s; }
-.nav-item:hover { background:rgba(255,255,255,0.04); color:var(--text-mid); }
-.nav-item.active { background:rgba(239,159,39,0.08); color:var(--amber); }
-.nav-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
-.nav-dot-resume { background:var(--amber); }
-.nav-dot-cover { background:var(--purple); }
-.nav-dot-portfolio { background:var(--blue); }
-.nav-key { margin-left:auto; font-size:9px; color:var(--border); background:var(--bg); border:1px solid var(--border); border-radius:3px; padding:1px 4px; }
-.nav-item.active .nav-key { border-color:var(--amber-bdr); color:var(--amber-dim); }
-.nav-divider { height:1px; background:var(--border); margin:10px 0; }
-.sidebar-hints { font-family:'PT Mono',monospace; font-size:10px; color:var(--text-mut); padding:0 8px; line-height:2; }
-.sidebar-hints kbd { font-family:'PT Mono',monospace; font-size:9px; background:var(--bg); border:1px solid var(--border); border-radius:3px; padding:1px 4px; }
-.sidebar-bottom { margin-top:auto; padding:0 8px; font-family:'PT Mono',monospace; font-size:10px; color:var(--border); line-height:1.8; }
 
-/* Overlay scrim — mobile only, shown when sidebar open */
-.sidebar-scrim {
-  display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6);
-  z-index:99; opacity:0; transition:opacity 0.3s ease;
-}
-
-.sidebar-toggle {
-  position:fixed; top:16px; left:16px; z-index:200;
-  width:36px; height:36px; border-radius:8px;
-  background:var(--surface); border:1px solid var(--border);
-  cursor:pointer; display:flex; align-items:center; justify-content:center;
-  transition:left 0.3s cubic-bezier(0.4,0,0.2,1), background 0.15s, border-color 0.15s;
-  box-shadow:0 2px 12px rgba(0,0,0,0.4);
-}
-.sidebar-toggle:hover { background:rgba(239,159,39,0.1); border-color:var(--amber-bdr); }
-.sidebar-toggle svg { transition:transform 0.3s ease; }
-body.nav-open .sidebar-toggle { left:calc(var(--nav-w) + 12px); }
-body.nav-open .sidebar-toggle svg { transform:rotate(180deg); }
-
-/* ══ MOBILE ══════════════════════════════════════════════════════════════════ */
-@media (max-width: 680px) {
-  :root { --nav-w: 240px; }
-
-  /* Sidebar overlays content on mobile — doesn't push it */
-  .sidebar { z-index:300; box-shadow:4px 0 24px rgba(0,0,0,0.6); }
-  .sidebar.collapsed { transform:translateX(calc(-1 * var(--nav-w))); }
-
-  /* Toggle stays at left:16px always on mobile */
-  body.nav-open .sidebar-toggle { left:16px; }
-  body.nav-open .sidebar-toggle svg { transform:none; }
-
-  /* Show scrim when open */
-  body.nav-open .sidebar-scrim { display:block; opacity:1; }
-
-  /* Hide keyboard hints on mobile */
-  .sidebar-hints { display:none; }
-
-  /* Main always full width on mobile */
-  .main { margin-left:0 !important; }
-
-  /* Content padding: top clears toggle button (36px + 16px top + 16px gap = 68px) */
-  .doc-panel { padding:72px 20px 48px; }
-
-  /* Pill: smaller, stays top-right but shorter label */
-  .pill { padding:6px 10px; font-size:10px; }
-  .pill-label-text { display:none; } /* just show dot on mobile */
-
-  /* Ticker tape: full width on mobile */
-  .ticker-tape { width:calc(100vw - 48px); right:0; }
-
-  /* Strengths: 2 col on mobile */
-  .strengths-grid { grid-template-columns:repeat(2,1fr); }
-
-  /* Bottom row: stack on mobile */
-  .bottom-row { grid-template-columns:1fr; gap:24px; }
-
-  /* Job header: allow wrap on mobile */
-  .job-header { flex-wrap:wrap; gap:2px; }
-  .job-dates { font-size:10px; }
-
-  /* Name: slightly smaller on mobile */
-  .name { font-size:24px; }
-  .tagline { font-size:13px; }
-}
-
-/* ══ PILL ══════════════════════════════════════════════════════════════════════ */
-.pill-wrap { position:fixed; top:20px; right:24px; z-index:200; }
-
-.pill {
-  display:flex; align-items:center; gap:8px;
-  background:var(--surface); border:1px solid var(--border);
-  border-radius:100px; padding:7px 14px;
-  font-family:'PT Mono',monospace; font-size:11px; color:var(--text-mut);
-  cursor:pointer; box-shadow:0 4px 20px rgba(0,0,0,0.5);
-  transition:border-color 0.2s, box-shadow 0.2s, transform 0.18s cubic-bezier(0.34,1.56,0.64,1);
-  animation:pillFade 0.5s ease 0.2s both;
-  user-select:none; position:relative; z-index:2;
-}
-.pill:hover:not(:disabled) { border-color:var(--amber-bdr); transform:translateY(-2px); box-shadow:0 8px 28px rgba(0,0,0,0.6); }
-.pill:active:not(:disabled) { transform:scale(0.96); }
-.pill.firing { cursor:default; opacity:0.6; pointer-events:none; }
-.pill-dot { width:7px; height:7px; border-radius:50%; background:var(--amber); box-shadow:0 0 6px var(--amber); animation:pulse 2.4s ease-in-out infinite; flex-shrink:0; }
-.pill-label-text { transition:opacity 0.2s; }
-
-/* Confetti canvas — fixed, full screen, pointer-events off */
-#confetti-canvas {
-  position:fixed; inset:0; width:100%; height:100%;
-  pointer-events:none; z-index:999;
-}
-
-@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
-@keyframes pillFade { from{opacity:0;transform:translateY(-10px);} to{opacity:1;transform:translateY(0);} }
-
-/* ══ MAIN ══════════════════════════════════════════════════════════════════════ */
-.main { flex:1; margin-left:var(--nav-w); transition:margin-left 0.3s cubic-bezier(0.4,0,0.2,1); }
-body:not(.nav-open) .main { margin-left:0; }
-/* Top padding clears the toggle button (36px height + 16px top + 20px gap = 72px) */
-.doc-panel { display:none; max-width:794px; margin:0 auto; padding:72px 48px 64px; }
-.doc-panel.active { display:block; }
-
-/* ══ FADE-UP ═══════════════════════════════════════════════════════════════════ */
-.fade-up { opacity:0; transform:translateY(20px); transition:opacity 0.32s ease, transform 0.32s ease; }
-.fade-up.visible { opacity:1; transform:translateY(0); }
-
-/* ══ RESUME ════════════════════════════════════════════════════════════════════ */
-.eyebrow { font-family:'PT Mono',monospace; font-size:11px; letter-spacing:0.08em; margin-bottom:8px; }
-.eyebrow-role { color:var(--amber); }
-.eyebrow-dept { color:var(--text-mid); }
-.name { font-size:30px; font-weight:700; color:var(--text-pri); letter-spacing:-0.02em; line-height:1.15; margin-bottom:10px; }
-.tagline { font-size:14px; color:var(--text-mid); line-height:1.65; margin-bottom:18px; max-width:580px; }
-.contacts { display:flex; gap:24px; flex-wrap:wrap; align-items:center; }
-.contact { font-family:'PT Mono',monospace; font-size:12px; color:var(--blue); text-decoration:none; display:inline-flex; align-items:center; gap:5px; }
-.contact-icon { width:13px; height:13px; flex-shrink:0; opacity:0.6; transition:opacity 0.15s; }
-.contact-plain { color:var(--text-mut); cursor:default; }
-.contact-plain .contact-icon { color:var(--text-mut); }
-
-.contact-copy { cursor:pointer; position:relative; }
-.contact-copy:hover { color:var(--amber); }
-.contact-copy:hover .contact-icon { opacity:1; color:var(--amber); }
-.contact-copied { display:none; position:absolute; top:-24px; left:50%; transform:translateX(-50%); background:var(--amber); color:var(--bg); font-size:10px; padding:2px 8px; border-radius:4px; white-space:nowrap; pointer-events:none; }
-.contact-copy.copied .contact-label { opacity:0.5; }
-.contact-copy.copied .contact-copied { display:block; animation:copiedFade 1.4s ease forwards; }
-@keyframes copiedFade { 0%{opacity:1;transform:translateX(-50%) translateY(0);} 70%{opacity:1;} 100%{opacity:0;transform:translateX(-50%) translateY(-6px);} }
-
-.contact-link:hover { color:var(--blue); opacity:0.8; }
-.contact-link:hover .contact-icon { opacity:1; }
-.section { margin-top:36px; }
-.section-head { font-family:'PT Mono',monospace; font-size:10px; color:var(--amber); letter-spacing:0.1em; text-transform:uppercase; padding-bottom:8px; border-bottom:1px solid var(--amber-bdr); margin-bottom:16px; }
-.profile-text { font-size:13px; color:var(--text-mid); line-height:1.8; }
-.strengths-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
-.strength-card { background:var(--surface); border:1px solid var(--purple-bdr); border-top:2px solid var(--purple); border-radius:8px; padding:14px; cursor:pointer; transition:transform 0.22s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.22s ease, border-color 0.22s ease; }
-.strength-card:hover { transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,0.4),0 0 0 1px var(--purple),0 0 20px rgba(127,119,221,0.12); border-color:var(--purple); }
-.strength-header { display:flex; align-items:center; justify-content:space-between; }
-.strength-label { font-size:13px; font-weight:600; color:var(--text-pri); }
-.strength-toggle { font-size:14px; color:var(--purple); opacity:0.5; transition:transform 0.22s ease, opacity 0.2s; flex-shrink:0; }
-.strength-card.open .strength-toggle { transform:rotate(45deg); opacity:1; }
-.strength-body { overflow:hidden; max-height:0; transition:max-height 0.28s ease, opacity 0.22s ease, margin-top 0.22s ease; opacity:0; }
-.strength-card.open .strength-body { max-height:120px; opacity:1; margin-top:8px; }
-.strength-skills { font-family:'PT Mono',monospace; font-size:11px; color:var(--text-mid); line-height:1.8; }
-.impact-card { background:var(--amber-bg); border:1px solid var(--amber-bdr); border-radius:8px; padding:16px 18px; display:flex; flex-direction:column; gap:8px; }
-.bullet { display:flex; gap:8px; align-items:flex-start; font-size:13px; color:var(--text-mid); line-height:1.65; }
-.bullet-chevron { color:var(--amber-dim); flex-shrink:0; line-height:1.65; }
-.job { display:flex; flex-direction:column; gap:4px; }
-.job+.job { margin-top:16px; padding-top:16px; border-top:1px solid rgba(33,38,45,0.6); }
-.job-header { display:flex; justify-content:space-between; align-items:baseline; gap:12px; }
-.job-title { font-size:14px; font-weight:600; color:var(--text-pri); }
-.job-dates { font-family:'PT Mono',monospace; font-size:11px; color:var(--text-mid); white-space:nowrap; flex-shrink:0; }
-.job-co { font-size:12px; color:var(--blue); }
-.job-toggle { display:inline-flex; align-items:center; gap:5px; margin-top:5px; font-family:'PT Mono',monospace; font-size:10px; color:var(--text-mut); cursor:pointer; background:none; border:none; padding:0; transition:color 0.15s; letter-spacing:0.04em; }
-.job-toggle:hover { color:var(--amber); }
-.job-toggle-icon { font-size:12px; transition:transform 0.22s ease; }
-.job.open .job-toggle-icon { transform:rotate(45deg); }
-.job-toggle-label-more { display:inline; }
-.job-toggle-label-less { display:none; }
-.job.open .job-toggle-label-more { display:none; }
-.job.open .job-toggle-label-less { display:inline; }
-.job-detail { overflow:hidden; max-height:0; transition:max-height 0.3s ease, opacity 0.25s ease, margin-top 0.25s ease; opacity:0; }
-.job.open .job-detail { max-height:600px; opacity:1; margin-top:6px; }
-.job-desc { font-size:12px; color:var(--text-mid); line-height:1.7; margin-bottom:6px; }
-.job-bullets { display:flex; flex-direction:column; gap:4px; }
-.plain-bullets { display:flex; flex-direction:column; gap:4px; }
-.arts-title { font-size:13px; font-weight:600; color:var(--text-pri); }
-.arts-co { font-size:12px; color:var(--blue); margin:2px 0 6px; }
-.arts-text { font-size:12px; color:var(--text-mid); line-height:1.75; }
-.bottom-row { display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:start; }
-.tools-text { font-family:'PT Mono',monospace; font-size:11px; color:var(--text-mid); line-height:1.9; }
-.footer-note { margin-top:40px; font-family:'PT Mono',monospace; font-size:11px; color:var(--text-mut); text-align:center; padding-top:20px; border-top:1px solid var(--border); }
-.coming-soon { display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:60vh; gap:16px; text-align:center; }
-.coming-soon-label { font-family:'PT Mono',monospace; font-size:11px; color:var(--amber); letter-spacing:0.1em; text-transform:uppercase; }
-.coming-soon-title { font-size:22px; font-weight:700; color:var(--text-pri); }
-.coming-soon-sub { font-size:13px; color:var(--text-mut); max-width:320px; line-height:1.7; }
-
-/* Loading state */
-.content-loading { opacity:0.4; filter:blur(2px); transition:opacity 0.4s, filter 0.4s; pointer-events:none; }
-
-/* ══ PRINT ═════════════════════════════════════════════════════════════════════ */
-@media print {
-  :root { --bg:#fff; --surface:#f5f5f5; --border:#ddd; --amber:#a05e00; --amber-dim:#7a4700; --amber-bg:#fffbf4; --amber-bdr:#e8d4a8; --purple:#4a3fbf; --purple-bdr:#c8c4f0; --blue:#1a4e8a; --text-pri:#0d0d0d; --text-mid:#2a2a2a; --text-mut:#555; }
-  body { background:#fff; -webkit-print-color-adjust:exact; print-color-adjust:exact; display:block; }
-  .sidebar,.sidebar-toggle,.pill-wrap { display:none !important; }
-  .main { margin-left:0 !important; }
-  .doc-panel { display:block !important; padding:0; max-width:100%; }
-  #panel-cover,#panel-portfolio { display:none !important; }
-  .job-detail { max-height:none !important; opacity:1 !important; margin-top:6px !important; overflow:visible !important; }
-  .job-toggle { display:none !important; }
-  .strength-card { break-inside:avoid; }
-  .strength-card:hover { transform:none; box-shadow:none; }
-  .strength-body { max-height:none !important; opacity:1 !important; margin-top:6px !important; overflow:visible !important; }
-  .strength-toggle { display:none; }
-  .job { break-inside:avoid; page-break-inside:avoid; }
-  .section { break-inside:avoid; }
-  .impact-card { break-inside:avoid; }
-  .fade-up { opacity:1 !important; transform:none !important; }
-  @page { margin:14mm 16mm; size:A4; }
+/* ══ PRINT ══════════════════════════════════════════════════════════════════ */
+@media print{
+  :root{--bg:#fff;--surface:#f5f5f5;--border:#ddd;--amber:#a05e00;--amber-dim:#7a4700;--amber-bg:#fffbf4;--amber-bdr:#e8d4a8;--purple:#4a3fbf;--purple-bdr:#c8c4f0;--blue:#1a4e8a;--text-pri:#0d0d0d;--text-mid:#2a2a2a;--text-mut:#555}
+  body{background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact;display:block}
+  .sidebar,.sidebar-toggle,.pill-wrap,.approach-dropdown-wrap,.approach-sidenav,.approach-footer{display:none !important}
+  .main{margin-left:0 !important}
+  .doc-panel{display:block !important;padding:0;max-width:100%}
+  .approach-panel{padding:0 !important;max-width:100% !important}
+  .approach-wrap{padding:0 !important;max-width:100% !important}
+  .approach-layout{display:block !important}
+  .approach-content{width:100% !important}
+  .cover-body p{break-inside:avoid;page-break-inside:avoid;orphans:3;widows:3}
+  .cover-body{opacity:1 !important;transform:none !important}
+  .cover-sign{break-inside:avoid;page-break-inside:avoid}
+  /* Approach — keep each principle together */
+  .approach-section{break-inside:avoid;page-break-inside:avoid}
+  .approach-body p{orphans:3;widows:3}
+  /* Resume */
+  .job-detail{max-height:none !important;opacity:1 !important;margin-top:6px !important;overflow:visible !important}
+  .job-toggle{display:none !important}
+  .strength-card{break-inside:avoid}
+  .strength-card:hover{transform:none;box-shadow:none}
+  .strength-body{max-height:none !important;opacity:1 !important;margin-top:6px !important;overflow:visible !important}
+  .strength-toggle{display:none}
+  .job{break-inside:avoid;page-break-inside:avoid}
+  .section{break-inside:avoid}
+  .impact-card{break-inside:avoid}
+  .fade-up{opacity:1 !important;transform:none !important}
+  @page{margin:14mm 16mm;size:A4}
 }
 </style>
 </head>
 <body class="nav-open">
 
-<!-- Sidebar scrim (mobile overlay) -->
 <div class="sidebar-scrim" id="sidebarScrim"></div>
 
-<!-- Sidebar toggle -->
 <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle navigation">
   <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
     <rect y="0" width="14" height="1.5" rx="0.75" fill="#8b949e"/>
@@ -255,23 +275,34 @@ body:not(.nav-open) .main { margin-left:0; }
   </svg>
 </button>
 
-<!-- Sidebar -->
 <nav class="sidebar" id="sidebar">
-  <div class="sidebar-wordmark"><strong>Thomas Gage</strong><br>Director of strategy</div>
-  <div class="sidebar-section-label">Documents</div>
-  <button class="nav-item active" onclick="showPanel('resume')" id="nav-resume"><div class="nav-dot nav-dot-resume"></div>Resume<span class="nav-key">1</span></button>
-  <button class="nav-item" onclick="showPanel('cover')" id="nav-cover"><div class="nav-dot nav-dot-cover"></div>Cover letter<span class="nav-key">2</span></button>
-  <button class="nav-item" onclick="showPanel('portfolio')" id="nav-portfolio"><div class="nav-dot nav-dot-portfolio"></div>Portfolio<span class="nav-key">3</span></button>
-  <div class="nav-divider"></div>
-  <div class="sidebar-hints"><kbd>j</kbd><kbd>k</kbd> scroll<br><kbd>g</kbd> top &nbsp;<kbd>G</kbd> bottom<br><kbd>p</kbd> print &nbsp;<kbd>n</kbd> nav</div>
-  <div class="sidebar-bottom">tgfrenchy.github.io<br>/thomas-gage</div>
+  <div class="sidebar-inner">
+    <div class="sidebar-wordmark"><strong>Thomas Gage</strong><br>Director of strategy</div>
+    <div class="sidebar-section-label">Documents</div>
+    <button class="nav-item active" onclick="showPanel('resume')" id="nav-resume">
+      <div class="nav-dot nav-dot-resume"></div>
+      <span class="nav-item-label">Resume</span>
+      <span class="nav-key">1</span>
+    </button>
+    <button class="nav-item" onclick="showPanel('cover')" id="nav-cover">
+      <div class="nav-dot nav-dot-cover"></div>
+      <span class="nav-item-label">Cover letter</span>
+      <span class="nav-key">2</span>
+    </button>
+    <button class="nav-item" onclick="showPanel('approach')" id="nav-approach">
+      <div class="nav-dot nav-dot-approach"></div>
+      <span class="nav-item-label">My approach</span>
+      <span class="nav-key">3</span>
+    </button>
+    <div class="nav-divider"></div>
+    <div class="sidebar-hints"><kbd>j</kbd><kbd>k</kbd> scroll<br><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> docs<br><kbd>p</kbd> print &nbsp;<kbd>n</kbd> nav</div>
+    <div class="sidebar-bottom">tgfrenchy.github.io<br>/thomas-gage</div>
+  </div>
 </nav>
 
-<!-- Confetti canvas -->
 <canvas id="confetti-canvas"></canvas>
 
-<!-- Pill -->
-<div class="pill-wrap" id="pillWrap">
+<div class="pill-wrap">
   <div class="pill" id="pill" role="button" tabindex="0" aria-label="Celebrate">
     <div class="pill-dot"></div>
     <span class="pill-label-text" id="pillLabel">resume</span>
@@ -280,34 +311,31 @@ body:not(.nav-open) .main { margin-left:0; }
 
 <main class="main" id="main">
 
-  <!-- RESUME -->
+  <!-- ── RESUME ─────────────────────────────────────────────────────────── -->
   <div class="doc-panel active" id="panel-resume">
     <div class="fade-up" style="transition-delay:0.04s">
       <div class="eyebrow"><span class="eyebrow-role">DIRECTOR · </span><span class="eyebrow-dept">STRATEGY, MARKETING & COMMUNICATIONS</span></div>
       <div class="name" id="content-name">Thomas Gage</div>
       <div class="tagline" id="content-tagline">I help organizations get clear on what they're trying to do, tell the right story and build the marketing, communications and digital systems to make it happen.</div>
       <div class="contacts">
-        <span class="contact contact-copy" id="content-email" data-copy="gage.thomas@gmail.com" title="Copy email address">
-          <svg class="contact-icon" viewBox="0 0 16 16" fill="none"><path d="M2 4a1 1 0 011-1h10a1 1 0 011 1v8a1 1 0 01-1 1H3a1 1 0 01-1-1V4z" stroke="currentColor" stroke-width="1.2"/><path d="M2 4l6 5 6-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        <span class="contact contact-copy" data-copy="gage.thomas@gmail.com" title="Copy email address">
           <span class="contact-label">gage.thomas@gmail.com</span>
+          <svg class="contact-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="5" y="1" width="9" height="11" rx="1.5" stroke="currentColor" stroke-width="1.3"/><rect x="2" y="4" width="9" height="11" rx="1.5" fill="var(--bg)" stroke="currentColor" stroke-width="1.3"/></svg>
           <span class="contact-copied">copied!</span>
         </span>
-        <span class="contact contact-plain" id="content-location">Langley, BC</span>
-        <a class="contact contact-link" href="https://linkedin.com/in/thgage" target="_blank" rel="noopener" id="content-linkedin" title="Open LinkedIn profile">
-          <svg class="contact-icon" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M5 7v4M5 5v.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M8 11V8.5A1.5 1.5 0 0111 8.5V11" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><path d="M8 7v4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        <a class="contact contact-link" href="https://linkedin.com/in/thgage" target="_blank" rel="noopener" title="Open LinkedIn profile">
           linkedin.com/in/thgage
+          <svg class="contact-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6 3H3a1 1 0 00-1 1v9a1 1 0 001 1h9a1 1 0 001-1v-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M9 2h5v5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 2L8 8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
         </a>
       </div>
     </div>
-
     <div class="section fade-up" style="transition-delay:0.10s">
       <div class="section-head">Profile</div>
       <p class="profile-text" id="content-profile">Strategy, marketing and communications leader with 15+ years of experience across brand, content, websites, digital marketing, audience growth and organizational strategy. I build practical systems that help teams make better decisions, strengthen their story, improve digital performance and turn scattered effort into focused momentum. My work combines strategic discipline, creative judgement and operating clarity, with experience across purpose-driven organizations, education, arts, nonprofits and community-based work.</p>
     </div>
-
     <div class="section fade-up" style="transition-delay:0.15s">
       <div class="section-head">Core strengths <span style="font-size:9px;opacity:0.4;margin-left:6px;font-weight:400;letter-spacing:0">click to expand</span></div>
-      <div class="strengths-grid" id="content-strengths">
+      <div class="strengths-grid">
         <div class="strength-card" tabindex="0" role="button" aria-expanded="false"><div class="strength-header"><div class="strength-label">Strategy and leadership</div><div class="strength-toggle">+</div></div><div class="strength-body"><div class="strength-skills">marketing strategy · organizational clarity · stakeholder alignment · team leadership</div></div></div>
         <div class="strength-card" tabindex="0" role="button" aria-expanded="false"><div class="strength-header"><div class="strength-label">Brand and narrative</div><div class="strength-toggle">+</div></div><div class="strength-body"><div class="strength-skills">positioning · messaging · brand stewardship · content strategy · storytelling</div></div></div>
         <div class="strength-card" tabindex="0" role="button" aria-expanded="false"><div class="strength-header"><div class="strength-label">Digital performance</div><div class="strength-toggle">+</div></div><div class="strength-body"><div class="strength-skills">website optimization · SEO/AEO · analytics · paid campaigns · social media · email marketing</div></div></div>
@@ -316,310 +344,403 @@ body:not(.nav-open) .main { margin-left:0; }
         <div class="strength-card" tabindex="0" role="button" aria-expanded="false"><div class="strength-header"><div class="strength-label">Sectors</div><div class="strength-toggle">+</div></div><div class="strength-body"><div class="strength-skills">Purpose-driven · Education · Arts · Nonprofits · Community</div></div></div>
       </div>
     </div>
-
     <div class="section fade-up" style="transition-delay:0.20s">
       <div class="section-head">Selected impact</div>
-      <div class="impact-card" id="content-impact">
-        <div class="bullet"><span class="bullet-chevron">›</span><span>Led strategy across 100+ brand, website, content and digital projects, helping organizations clarify direction, strengthen communications and improve audience engagement.</span></div>
-        <div class="bullet"><span class="bullet-chevron">›</span><span>Help lead agency strategy and operations at Briteweb, supporting revenue forecasting, resourcing, project budgets, retainers, service models and delivery systems.</span></div>
-        <div class="bullet"><span class="bullet-chevron">›</span><span>Built systems across content strategy, SEO/AEO, website optimization, support planning and small-team marketing.</span></div>
-        <div class="bullet"><span class="bullet-chevron">›</span><span>Managed the project management team of up to 8 people, directly managing 4 at peak, with a focus on trust, clarity, accountability and removing obstacles.</span></div>
-        <div class="bullet"><span class="bullet-chevron">›</span><span>Supported audience and enrolment growth through work with Little Kitchen Academy and White Rock Players Club, including registration-focused marketing, audience segmentation, paid campaigns and email journeys.</span></div>
+      <div class="impact-card">
+        <div class="bullet"><span class="bullet-mark">—</span><span>Led strategy across 100+ brand, website, content and digital projects, helping organizations clarify direction, strengthen communications and improve audience engagement.</span></div>
+        <div class="bullet"><span class="bullet-mark">—</span><span>Help lead agency strategy and operations at Briteweb, supporting revenue forecasting, resourcing, project budgets, retainers, service models and delivery systems.</span></div>
+        <div class="bullet"><span class="bullet-mark">—</span><span>Built systems across content strategy, SEO/AEO, website optimization, support planning and small-team marketing.</span></div>
+        <div class="bullet"><span class="bullet-mark">—</span><span>Managed the project management team of up to 8 people, directly managing 4 at peak, with a focus on trust, clarity, accountability and removing obstacles.</span></div>
+        <div class="bullet"><span class="bullet-mark">—</span><span>Supported audience and enrolment growth through work with Little Kitchen Academy and White Rock Players Club, including registration-focused marketing, audience segmentation, paid campaigns and email journeys.</span></div>
       </div>
     </div>
-
     <div class="section fade-up" style="transition-delay:0.24s">
       <div class="section-head">Experience</div>
-      <div id="content-experience">
-        <div class="job"><div class="job-header"><span class="job-title">Director of strategy</span><span class="job-dates">Jun 2023 – present</span></div><div class="job-co">Briteweb · Vancouver, BC</div><button class="job-toggle" aria-expanded="false"><span class="job-toggle-icon">+</span><span class="job-toggle-label-more">show detail</span><span class="job-toggle-label-less">hide detail</span></button><div class="job-detail"><div class="job-desc">Help lead a creative agency serving nonprofits, foundations, B Corps and purpose-driven organizations. My work connects strategy, marketing, communications, resourcing and delivery.</div><div class="job-bullets"><div class="bullet"><span class="bullet-chevron">›</span><span>Help lead agency planning across revenue forecasting, resourcing, retainers, project budgets, service development and delivery models.</span></div><div class="bullet"><span class="bullet-chevron">›</span><span>Lead strategy across brand, website, content, SEO/AEO and digital growth projects, connecting organizational priorities with audience needs and practical execution.</span></div><div class="bullet"><span class="bullet-chevron">›</span><span>Developed internal strategy systems including content strategy process, SEO/AEO approach, website optimization, support playbook and small-team marketing model.</span></div><div class="bullet"><span class="bullet-chevron">›</span><span>Facilitate senior stakeholder conversations to clarify goals, resolve competing ideas and turn complexity into usable direction.</span></div><div class="bullet"><span class="bullet-chevron">›</span><span>Managed the project management team of up to 8 people, directly managing 4, with a leadership style focused on individual strengths, clear direction and trust.</span></div></div></div></div>
-        <div class="job"><div class="job-header"><span class="job-title">Instructor, content strategy workshop</span><span class="job-dates">Jan 2024 – present</span></div><div class="job-co">Capilano University</div><button class="job-toggle" aria-expanded="false"><span class="job-toggle-icon">+</span><span class="job-toggle-label-more">show detail</span><span class="job-toggle-label-less">hide detail</span></button><div class="job-detail"><div class="job-desc">Designed and taught a four-week content strategy workshop for third-year Bachelor of Design students, covering content strategy across design, brand, websites, audience understanding, messaging and creative execution.</div></div></div>
-        <div class="job"><div class="job-header"><span class="job-title">Senior content strategist</span><span class="job-dates">Jan 2022 – Jun 2023</span></div><div class="job-co">Briteweb · Vancouver, BC</div><button class="job-toggle" aria-expanded="false"><span class="job-toggle-icon">+</span><span class="job-toggle-label-more">show detail</span><span class="job-toggle-label-less">hide detail</span></button><div class="job-detail"><div class="job-bullets"><div class="bullet"><span class="bullet-chevron">›</span><span>Led content strategy for brand and website projects, shaping how content supported UX, information architecture and long-term publishing needs.</span></div><div class="bullet"><span class="bullet-chevron">›</span><span>Partnered with designers, developers, project managers and account leads to translate strategy into page plans and content recommendations.</span></div></div></div></div>
-        <div class="job"><div class="job-header"><span class="job-title">Digital strategist</span><span class="job-dates">Nov 2019 – Dec 2021</span></div><div class="job-co">Studiothink</div><button class="job-toggle" aria-expanded="false"><span class="job-toggle-icon">+</span><span class="job-toggle-label-more">show detail</span><span class="job-toggle-label-less">hide detail</span></button><div class="job-detail"><div class="job-bullets"><div class="bullet"><span class="bullet-chevron">›</span><span>Created website content, SEO, social media and digital advertising strategies for small businesses.</span></div><div class="bullet"><span class="bullet-chevron">›</span><span>Led keyword research, content planning, on-page SEO, social media and ad management to improve visibility and conversion.</span></div></div></div></div>
-        <div class="job"><div class="job-header"><span class="job-title">Digital content specialist</span><span class="job-dates">May 2017 – Nov 2019</span></div><div class="job-co">First West Credit Union</div><button class="job-toggle" aria-expanded="false"><span class="job-toggle-icon">+</span><span class="job-toggle-label-more">show detail</span><span class="job-toggle-label-less">hide detail</span></button><div class="job-detail"><div class="job-bullets"><div class="bullet"><span class="bullet-chevron">›</span><span>Created and managed digital content across website, social channels, digital ads and email campaigns.</span></div><div class="bullet"><span class="bullet-chevron">›</span><span>Balanced clarity, compliance, brand consistency and member value in a regulated environment.</span></div></div></div></div>
-        <div class="job" style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(33,38,45,0.6)"><div class="job-header"><span class="job-title" style="font-size:13px">Earlier experience</span></div><div class="plain-bullets" style="margin-top:6px"><div class="bullet"><span class="bullet-chevron">›</span><span>Marketing officer, volunteer engagement — Big Brothers of Greater Vancouver (2017)</span></div><div class="bullet"><span class="bullet-chevron">›</span><span>Communications specialist — Trinity Western University Alumni Association (2015–2016)</span></div><div class="bullet"><span class="bullet-chevron">›</span><span>Communications specialist — Power to Change Ministries (2013–2015)</span></div></div></div>
-      </div>
+      <div class="job"><div class="job-header"><span class="job-title">Director of strategy</span><span class="job-dates">Jun 2023 – present</span></div><div class="job-co">Briteweb · Vancouver, BC</div><button class="job-toggle" aria-expanded="false"><span class="job-toggle-icon">+</span><span class="job-toggle-label-more">show detail</span><span class="job-toggle-label-less">hide detail</span></button><div class="job-detail"><div class="job-desc">Help lead a creative agency serving nonprofits, foundations, B Corps and purpose-driven organizations. My work connects strategy, marketing, communications, resourcing and delivery.</div><div class="job-bullets"><div class="bullet"><span class="bullet-mark">—</span><span>Help lead agency planning across revenue forecasting, resourcing, retainers, project budgets, service development and delivery models.</span></div><div class="bullet"><span class="bullet-mark">—</span><span>Lead strategy across brand, website, content, SEO/AEO and digital growth projects, connecting organizational priorities with audience needs and practical execution.</span></div><div class="bullet"><span class="bullet-mark">—</span><span>Developed internal strategy systems including content strategy process, SEO/AEO approach, website optimization, support playbook and small-team marketing model.</span></div><div class="bullet"><span class="bullet-mark">—</span><span>Facilitate senior stakeholder conversations to clarify goals, resolve competing ideas and turn complexity into usable direction.</span></div><div class="bullet"><span class="bullet-mark">—</span><span>Managed the project management team of up to 8 people, directly managing 4, with a leadership style focused on individual strengths, clear direction and trust.</span></div></div></div></div>
+      <div class="job"><div class="job-header"><span class="job-title">Instructor, content strategy workshop</span><span class="job-dates">Jan 2024 – present</span></div><div class="job-co">Capilano University</div><button class="job-toggle" aria-expanded="false"><span class="job-toggle-icon">+</span><span class="job-toggle-label-more">show detail</span><span class="job-toggle-label-less">hide detail</span></button><div class="job-detail"><div class="job-desc">Designed and taught a four-week content strategy workshop for third-year Bachelor of Design students, covering content strategy across design, brand, websites, audience understanding, messaging and creative execution.</div></div></div>
+      <div class="job"><div class="job-header"><span class="job-title">Senior content strategist</span><span class="job-dates">Jan 2022 – Jun 2023</span></div><div class="job-co">Briteweb · Vancouver, BC</div><button class="job-toggle" aria-expanded="false"><span class="job-toggle-icon">+</span><span class="job-toggle-label-more">show detail</span><span class="job-toggle-label-less">hide detail</span></button><div class="job-detail"><div class="job-bullets"><div class="bullet"><span class="bullet-mark">—</span><span>Led content strategy for brand and website projects, shaping how content supported UX, information architecture and long-term publishing needs.</span></div><div class="bullet"><span class="bullet-mark">—</span><span>Partnered with designers, developers, project managers and account leads to translate strategy into page plans and content recommendations.</span></div></div></div></div>
+      <div class="job"><div class="job-header"><span class="job-title">Digital strategist</span><span class="job-dates">Nov 2019 – Dec 2021</span></div><div class="job-co">Studiothink</div><button class="job-toggle" aria-expanded="false"><span class="job-toggle-icon">+</span><span class="job-toggle-label-more">show detail</span><span class="job-toggle-label-less">hide detail</span></button><div class="job-detail"><div class="job-bullets"><div class="bullet"><span class="bullet-mark">—</span><span>Created website content, SEO, social media and digital advertising strategies for small businesses.</span></div><div class="bullet"><span class="bullet-mark">—</span><span>Led keyword research, content planning, on-page SEO, social media and ad management to improve visibility and conversion.</span></div></div></div></div>
+      <div class="job"><div class="job-header"><span class="job-title">Digital content specialist</span><span class="job-dates">May 2017 – Nov 2019</span></div><div class="job-co">First West Credit Union</div><button class="job-toggle" aria-expanded="false"><span class="job-toggle-icon">+</span><span class="job-toggle-label-more">show detail</span><span class="job-toggle-label-less">hide detail</span></button><div class="job-detail"><div class="job-bullets"><div class="bullet"><span class="bullet-mark">—</span><span>Created and managed digital content across website, social channels, digital ads and email campaigns.</span></div><div class="bullet"><span class="bullet-mark">—</span><span>Balanced clarity, compliance, brand consistency and member value in a regulated environment.</span></div></div></div></div>
+      <div class="job" style="margin-top:16px;padding-top:16px;border-top:1px solid rgba(33,38,45,0.6)"><div class="job-header"><span class="job-title" style="font-size:13px">Earlier experience</span></div><div class="plain-bullets" style="margin-top:6px"><div class="bullet"><span class="bullet-mark">—</span><span>Marketing officer, volunteer engagement — Big Brothers of Greater Vancouver (2017)</span></div><div class="bullet"><span class="bullet-mark">—</span><span>Communications specialist — Trinity Western University Alumni Association (2015–2016)</span></div><div class="bullet"><span class="bullet-mark">—</span><span>Communications specialist — Power to Change Ministries (2013–2015)</span></div></div></div>
     </div>
-
     <div class="section fade-up" style="transition-delay:0.28s">
       <div class="section-head">Community arts leadership</div>
       <div class="arts-title">Board volunteer, communications</div>
       <div class="arts-co">White Rock Players Club · 2017–2018</div>
       <p class="arts-text" id="content-arts">Took ownership of marketing strategy as a board volunteer, building the audience development system behind the club's first four-show consecutive sold-out season. Combined season subscriptions, audience analytics, segmentation, Facebook Ads and email journeys to support stronger attendance and more repeatable marketing.</p>
     </div>
-
     <div class="section bottom-row fade-up" style="transition-delay:0.32s">
       <div>
         <div class="section-head">Education</div>
-        <div class="plain-bullets"><div class="bullet"><span class="bullet-chevron">›</span><span>BA, Communications — 2011</span></div><div class="bullet"><span class="bullet-chevron">›</span><span>BA, Theatre — 2007</span></div></div>
+        <div class="plain-bullets"><div class="bullet"><span class="bullet-mark">—</span><span>BA, Communications — 2011</span></div><div class="bullet"><span class="bullet-mark">—</span><span>BA, Theatre — 2007</span></div></div>
       </div>
       <div>
         <div class="section-head">Tools and platforms</div>
         <div class="tools-text" id="content-tools">Google Analytics · Search Console · Ahrefs · CMS platforms · Email marketing · Social media · Digital ads · Figma/FigJam · Asana · HubSpot</div>
       </div>
     </div>
-
     <div class="footer-note fade-up" style="transition-delay:0.36s">
-      references and portfolio available on request &nbsp;·&nbsp;
+      <div class="footer-nav">
+        <button class="footer-nav-link footer-nav-link-resume" data-panel="resume" onclick="showPanel('resume')"><div class="footer-nav-dot footer-nav-dot-resume"></div>Resume</button>
+        <button class="footer-nav-link footer-nav-link-cover" data-panel="cover" onclick="showPanel('cover')"><div class="footer-nav-dot footer-nav-dot-cover"></div>Cover letter</button>
+        <button class="footer-nav-link footer-nav-link-approach" data-panel="approach" onclick="showPanel('approach')"><div class="footer-nav-dot footer-nav-dot-approach"></div>My approach</button>
+      </div>
+      references available on request &nbsp;·&nbsp;
       <button onclick="window.print()" style="background:none;border:none;color:var(--amber-dim);font-family:'PT Mono',monospace;font-size:11px;cursor:pointer;text-decoration:underline;padding:0">print</button>
     </div>
   </div>
 
-  <!-- COVER LETTER -->
+  <!-- ── COVER LETTER ──────────────────────────────────────────────────── -->
   <div class="doc-panel" id="panel-cover">
-    <div class="coming-soon fade-up"><div class="coming-soon-label">Coming soon</div><div class="coming-soon-title">Cover letter</div><div class="coming-soon-sub">Tailored to the role. Clear on the why, grounded in the work.</div></div>
+    <div class="fade-up" style="transition-delay:0.04s">
+      <div class="cover-meta">
+        <div class="cover-meta-date">June 2026</div>
+        <div class="cover-addressee"><strong>Hiring Committee</strong><br>Arts Umbrella<br>Director, Marketing and Communications</div>
+        <div class="cover-salutation">Dear hiring committee,</div>
+      </div>
+      <div class="cover-body" id="coverBody">
+        <p>I'm excited to apply for the Director, Marketing and Communications role at Arts Umbrella.</p>
+        <p>For most of my career, I've had the privilege of working with organizations that are trying to make the world better. That matters to me. <strong>I do my best work when I can connect strategy, creativity and digital expertise to a mission I care about.</strong></p>
+        <p>The arts are a meaningful part of my life. I'm actively involved in community theatre, and I've seen first-hand how the arts build confidence, discipline, empathy, imagination and a stronger sense of self. I also believe they are essential to a healthy society. <strong>A vibrant arts landscape does not happen by accident.</strong> It starts with access, participation and investment in young people, so more families can see the arts as something available to them, not something distant or exclusive.</p>
+        <p>That is what draws me to Arts Umbrella. The organization plays an important role in helping young people build creative lives, while also helping more families and communities understand the value of the arts.</p>
+        <p>My work has consistently focused on helping mission-driven organizations gain clarity, focus on priorities and build practical systems that make their work more effective while centring human storytelling. I bring a mix of <strong>brand strategy, marketing strategy, digital expertise and data-informed decision-making</strong>, with deep experience across websites, content, SEO/AEO, audience journeys and organizational strategy.</p>
+        <p>In my current role as Director of Strategy at Briteweb, I lead strategy for a creative agency serving nonprofits, foundations, B Corps and other purpose-driven organizations. Much of that work is about helping complex organizations turn their website and digital presence into a more effective system: attracting the right audiences, clarifying pathways, improving content and calls to action, and making it easier for people to take meaningful next steps, whether that is registering for a program, subscribing for updates, making a donation or reaching out for more information.</p>
+        <p>I also look for <strong>the repeatable system underneath the immediate problem</strong>. How do we solve this once, learn from it and make the next version easier, stronger or more effective? That can mean improving a content model, creating a better reporting rhythm, refining a digital workflow, building a campaign system or designing a process that helps a team make better decisions without starting from scratch every time.</p>
+        <p>This is where I believe I can bring real value to Arts Umbrella. <strong>The role calls for someone who can connect brand, digital presence, audience engagement, enrolment, fundraising support, storytelling, reporting and team leadership into one stronger marketing and communications function.</strong> That is the kind of work I am best suited to do.</p>
+        <p>I have also included a short note on my approach to marketing and communications leadership. I do not see it as a set of recommendations from the outside. I see it as a reflection of how I would enter the role: by learning the organization deeply, understanding the goals and data, listening to the people already doing the work and then helping the team build a stronger marketing function over time.</p>
+        <p>I would be grateful for the opportunity to bring my experience in strategy to Arts Umbrella.</p>
+      </div>
+      <div class="cover-sign">
+        <div class="cover-sign-close">Sincerely,</div>
+        <div class="cover-sign-name">Thomas Gage</div>
+        <div class="cover-sign-title">Director of Strategy</div>
+      </div>
+    </div>
+    <div class="footer-note fade-up" style="transition-delay:0.2s;margin-top:2rem">
+      <div class="footer-nav">
+        <button class="footer-nav-link footer-nav-link-resume" data-panel="resume" onclick="showPanel('resume')"><div class="footer-nav-dot footer-nav-dot-resume"></div>Resume</button>
+        <button class="footer-nav-link footer-nav-link-cover" data-panel="cover" onclick="showPanel('cover')"><div class="footer-nav-dot footer-nav-dot-cover"></div>Cover letter</button>
+        <button class="footer-nav-link footer-nav-link-approach" data-panel="approach" onclick="showPanel('approach')"><div class="footer-nav-dot footer-nav-dot-approach"></div>My approach</button>
+      </div>
+      <button onclick="window.print()" style="background:none;border:none;color:var(--amber-dim);font-family:'PT Mono',monospace;font-size:11px;cursor:pointer;text-decoration:underline;padding:0">print this letter</button>
+    </div>
   </div>
 
-  <!-- PORTFOLIO -->
-  <div class="doc-panel" id="panel-portfolio">
-    <div class="coming-soon fade-up"><div class="coming-soon-label">Coming soon</div><div class="coming-soon-title">Portfolio</div><div class="coming-soon-sub">Selected work — strategy, brand, digital.</div></div>
+  <!-- ── APPROACH ──────────────────────────────────────────────────────── -->
+  <div class="doc-panel approach-panel" id="panel-approach">
+    <div class="approach-wrap">
+
+      <!-- Mobile: dropdown selector -->
+      <div class="approach-dropdown-wrap">
+        <select class="approach-dropdown" id="approachDropdown" aria-label="Select principle"></select>
+      </div>
+
+      <div class="approach-layout">
+        <!-- Desktop: sticky side nav -->
+        <div class="approach-sidenav">
+          <div class="approach-sidenav-inner">
+            <span class="approach-nav-label">Principles</span>
+            <div id="approachSidenavList"></div>
+          </div>
+        </div>
+        <!-- Content -->
+        <div class="approach-content" id="approachContent">
+          <div class="approach-eyebrow" id="ap-eyebrow"></div>
+          <div class="approach-title" id="ap-title"></div>
+          <div class="approach-body" id="ap-body"></div>
+          <div class="approach-footer">
+            <button class="approach-nav-btn" id="ap-prev">← prev</button>
+            <span class="approach-progress" id="ap-progress"></span>
+            <button class="approach-nav-btn" id="ap-next">next →</button>
+          </div>
+          <div class="footer-note" style="margin-top:2rem">
+            <div class="footer-nav">
+              <button class="footer-nav-link footer-nav-link-resume" data-panel="resume" onclick="showPanel('resume')"><div class="footer-nav-dot footer-nav-dot-resume"></div>Resume</button>
+              <button class="footer-nav-link footer-nav-link-cover" data-panel="cover" onclick="showPanel('cover')"><div class="footer-nav-dot footer-nav-dot-cover"></div>Cover letter</button>
+              <button class="footer-nav-link footer-nav-link-approach" data-panel="approach" onclick="showPanel('approach')"><div class="footer-nav-dot footer-nav-dot-approach"></div>My approach</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
 </main>
 
 <script>
-// ═══════════════════════════════════════════════════════════════════════════════
-// CONFETTI
-// ─────────────────────────────────────────────────────────────────────────────
-const pill       = document.getElementById('pill');
-const confCanvas = document.getElementById('confetti-canvas');
-const ctx        = confCanvas.getContext('2d');
-let   particles  = [];
-let   animFrame  = null;
-let   firing     = false;
+// ═══════════════════════════════════════════════════════════════════════
+// GOOGLE SHEETS CONTENT LOADER
+// ─────────────────────────────────────────────────────────────────────
+// Paste your published Google Sheet CSV URL here after setup.
+// File → Share → Publish to web → Sheet1 → CSV → Copy link
+const SHEET_URL = ''; // ← paste between the quotes when ready
 
-// Palette: amber, purple, blue, white, amber-dim
-const COLORS = ['#EF9F27','#7F77DD','#58a6ff','#e6edf3','#BA7517','#c9d1d9'];
-
-function resizeCanvas() {
-  confCanvas.width  = window.innerWidth;
-  confCanvas.height = window.innerHeight;
-}
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
-
-function randomBetween(a, b) { return a + Math.random() * (b - a); }
-
-function spawnParticles(x, y, count) {
-  for (let i = 0; i < count; i++) {
-    const angle = randomBetween(0, Math.PI * 2);
-    const speed = randomBetween(4, 14);
-    particles.push({
-      x, y,
-      vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed - randomBetween(2, 6), // bias upward
-      color: COLORS[Math.floor(Math.random() * COLORS.length)],
-      size: randomBetween(4, 9),
-      rotation: randomBetween(0, Math.PI * 2),
-      rotSpeed: randomBetween(-0.15, 0.15),
-      shape: Math.random() > 0.4 ? 'rect' : 'circle',
-      alpha: 1,
-      gravity: randomBetween(0.25, 0.45),
-      life: 1,
-      decay: randomBetween(0.012, 0.022),
+async function loadFromSheet() {
+  if (!SHEET_URL) return;
+  try {
+    const res = await fetch(SHEET_URL);
+    const csv = await res.text();
+    const rows = csv.trim().split('\n').map(r => {
+      // Handle quoted CSV values properly
+      const cols = []; let cur = ''; let inQ = false;
+      for (const ch of r) {
+        if (ch === '"') { inQ = !inQ; }
+        else if (ch === ',' && !inQ) { cols.push(cur.trim()); cur = ''; }
+        else { cur += ch; }
+      }
+      cols.push(cur.trim()); return cols;
     });
+    const data = {};
+    rows.forEach(([key, val]) => { if (key) data[key.toLowerCase()] = (val||'').trim(); });
+
+    const set = (id, val) => { const el=document.getElementById(id); if(el&&val) el.textContent=val; };
+    set('content-name',   data.name);
+    set('content-tagline',data.tagline);
+    set('content-profile',data.profile);
+    set('content-tools',  data.tools);
+    set('content-arts',   data.arts);
+
+    // Email copy
+    if (data.email) {
+      const em = document.querySelector('[data-copy]');
+      if (em) { em.dataset.copy = data.email; em.querySelector('.contact-label').textContent = data.email; }
+    }
+    // LinkedIn
+    if (data.linkedin) {
+      const li = document.querySelector('.contact-link');
+      if (li) { li.href = 'https://'+data.linkedin; li.childNodes[0].textContent = data.linkedin+' '; }
+    }
+  } catch(e) {
+    console.log('Sheet not loaded — using HTML defaults.', e);
   }
 }
+loadFromSheet();
 
-function drawParticle(p) {
-  ctx.save();
-  ctx.globalAlpha = p.alpha;
-  ctx.fillStyle = p.color;
-  ctx.translate(p.x, p.y);
-  ctx.rotate(p.rotation);
-  if (p.shape === 'rect') {
-    ctx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
-  } else {
-    ctx.beginPath();
-    ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
-    ctx.fill();
-  }
-  ctx.restore();
-}
+// ═══════════════════════════════════════════════════════════════════════
+// APPROACH DATA
+// ═══════════════════════════════════════════════════════════════════════
+const APPROACH=[
+  {num:'00',short:'Overview',title:'My approach to marketing and communications leadership',body:`<p>I would not come into this role with fixed recommendations. Arts Umbrella has its own goals, history, people, audiences, data and internal realities, and I would want to understand those deeply before deciding what should change.</p><p>What I can bring is a clear approach — one that combines listening, data, brand strategy, digital performance, content systems, fundraising support and team culture. These are the areas I would want to explore as I learned the organization and began shaping the work with the team.</p>`},
+  {num:'01',short:'Understand first',title:'Understand before recommending',body:`<p>Before making recommendations, I would want to understand Arts Umbrella's goals, audiences, team, current systems, data and internal context.</p><p>That means looking at enrolment patterns, campaign performance, donor journeys, website behaviour, content performance, social and email metrics, team workflows, program priorities, fundraising needs and leadership goals. It also means listening closely to the people already doing the work.</p><p>Strong strategy starts with context. The first step is not arriving with answers. It is learning what is true.</p>`},
+  {num:'02',short:'Team and culture',title:'Build team identity and culture',body:`<p>A strong marketing and communications function depends on a team that has shared direction, meaningful ownership and trust.</p><p>I care about cultivating a close-knit team that loves the work, gets energy from each other and feels proud of what they are building together. That kind of culture does not come from forced team bonding. It comes from clarity: knowing where we are going, why the work matters, what each person owns and how their contribution is recognized.</p><p>The goal is a team with enough structure to work well, enough trust to challenge each other and enough joy to make the work feel energizing.</p>`},
+  {num:'03',short:'Brand leadership',title:'Strengthen brand leadership',body:`<p>Arts Umbrella has the opportunity to become the name families think of first when they think about youth arts education in Vancouver and the Lower Mainland.</p><p>That requires more than awareness. It requires showing up in the right spaces, with the right story, often enough and clearly enough that Arts Umbrella becomes mentally available when families, students, schools, donors and community partners are thinking about the arts.</p><p>The brand work is not only about how Arts Umbrella presents itself. It is about how people come to understand the role Arts Umbrella can play in their lives.</p>`},
+  {num:'04',short:'Full-funnel marketing',title:'Build full-funnel marketing',body:`<p>I would want to understand the full path from awareness to registration, retention and deeper engagement.</p><p>Where are people discovering Arts Umbrella? Which channels are driving interest? Which pages are helping people move forward? Where are prospective families dropping off? Are the biggest opportunities in acquisition, conversion, retention or reducing the cost and effort required to create results?</p><p>A strong marketing function needs to understand what is happening across the full journey, not just what is being published or promoted.</p>`},
+  {num:'05',short:'Sector alliance',title:'Create sector alliance',body:`<p>The competitors of the arts are not only other arts organizations. They are everything else competing for a young person's time, attention and imagination.</p><p>That creates an opportunity to think beyond organizational promotion. Arts Umbrella can strengthen its own visibility while also helping more people see the value of the arts as a whole.</p><p>That may include partnerships with arts organizations, schools, community groups and cultural institutions — shared promotion, events, referral pathways, community activations, or sector-wide storytelling that opens doors for new communities. When more people see the value of the arts, everyone wins.</p>`},
+  {num:'06',short:'Fundraising journeys',title:'Support fundraising journeys',body:`<p>Marketing should help people move from awareness to belief, and from belief to support.</p><p>That means building clearer journeys that guide people toward giving, including monthly giving. Families, alumni, donors and community supporters should understand not only what Arts Umbrella offers, but why access to the arts matters and how their support helps more young people participate.</p><p>Fundraising communications work best when they are not separate from the broader story. They should grow naturally out of the same brand, content, experience and community-building work.</p>`},
+  {num:'07',short:'Belonging',title:'Design experiences that build belonging',body:`<p>Students and families should feel like they are part of something bigger than a class or program.</p><p>Arts Umbrella can be a doorway into the wider Vancouver and Lower Mainland arts scene — helping families feel connected to artists, performances, exhibitions, peers, creative pathways and possibilities beyond the building itself.</p><p>The student or family should feel like the hero of the experience. Arts Umbrella is the guide, the platform and the community around them.</p>`},
+  {num:'08',short:'Content systems',title:'Build content systems',body:`<p>A content calendar matters, but the larger need is a content system — knowing what stories to tell, who they are for, how they support enrolment, fundraising, brand and community-building, how they get produced, where they get distributed and how they continue creating value over time.</p><p>The system should balance evergreen content with timely content. A student story should not live once and disappear — it can become a web story, social post, email feature, donor touchpoint, enrolment asset and future campaign proof point.</p><p>This also matters for discoverability. Arts Umbrella needs to show up across traditional digital channels while also preparing for how discovery is changing through AI Overviews, LLMs and answer engines. The goal is a smarter system that helps Arts Umbrella become easier to find, easier to understand and easier to support.</p>`},
+];
 
-function animate() {
-  ctx.clearRect(0, 0, confCanvas.width, confCanvas.height);
-  particles.forEach(p => {
-    p.x  += p.vx;
-    p.y  += p.vy;
-    p.vy += p.gravity;
-    p.vx *= 0.98;
-    p.rotation += p.rotSpeed;
-    p.life -= p.decay;
-    p.alpha = Math.max(0, p.life);
-    drawParticle(p);
+let currentApproach=0;
+
+function buildApproachNav(){
+  const list=document.getElementById('approachSidenavList');
+  const dropdown=document.getElementById('approachDropdown');
+  APPROACH.forEach((s,i)=>{
+    // side nav
+    const btn=document.createElement('button');
+    btn.className='approach-nav-item';btn.id='apnav-'+i;
+    btn.innerHTML=`<span class="approach-nav-num">${s.num}</span><span class="approach-nav-title">${s.short}</span>`;
+    btn.addEventListener('click',()=>setApproach(i));
+    list.appendChild(btn);
+    // dropdown
+    const opt=document.createElement('option');
+    opt.value=i;opt.textContent=s.num+' — '+s.short;
+    dropdown.appendChild(opt);
   });
-  particles = particles.filter(p => p.life > 0);
-  if (particles.length > 0) {
-    animFrame = requestAnimationFrame(animate);
-  } else {
-    animFrame = null;
-    firing = false;
-    pill.classList.remove('firing');
-  }
+  dropdown.addEventListener('change',e=>setApproach(parseInt(e.target.value)));
 }
 
-function fireConfetti() {
-  if (firing) return; // disabled until reset
-  firing = true;
-  pill.classList.add('firing');
-
-  // Get pill position and fire from it
-  const rect   = pill.getBoundingClientRect();
-  const originX = rect.left + rect.width / 2;
-  const originY = rect.top  + rect.height / 2;
-
-  // Three bursts with slight delay for a more festive feel
-  spawnParticles(originX, originY, 60);
-  setTimeout(() => spawnParticles(originX, originY, 40), 120);
-  setTimeout(() => spawnParticles(originX, originY, 30), 260);
-
-  if (animFrame) cancelAnimationFrame(animFrame);
-  animFrame = requestAnimationFrame(animate);
+function setApproach(idx){
+  currentApproach=idx;
+  const s=APPROACH[idx];
+  document.getElementById('ap-eyebrow').textContent=idx===0?'Introduction':'Principle '+s.num;
+  document.getElementById('ap-title').textContent=s.title;
+  document.getElementById('ap-body').innerHTML=s.body;
+  document.getElementById('ap-progress').textContent=(idx+1)+' / '+APPROACH.length;
+  document.getElementById('ap-prev').disabled=idx===0;
+  document.getElementById('ap-next').disabled=idx===APPROACH.length-1;
+  document.querySelectorAll('.approach-nav-item').forEach((el,i)=>el.classList.toggle('active',i===idx));
+  document.getElementById('approachDropdown').value=idx;
+  // scroll content top on desktop
+  const content=document.getElementById('approachContent');
+  if(content) content.scrollTop=0;
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-pill.addEventListener('click', fireConfetti);
-pill.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' '){ e.preventDefault(); fireConfetti(); }});
+buildApproachNav();
+setApproach(0);
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// SIDEBAR
-// ─────────────────────────────────────────────────────────────────────────────
-const sidebar   = document.getElementById('sidebar');
-const toggleBtn = document.getElementById('sidebarToggle');
-const scrim     = document.getElementById('sidebarScrim');
-let navOpen = true;
+document.getElementById('ap-prev').addEventListener('click',()=>{if(currentApproach>0)setApproach(currentApproach-1)});
+document.getElementById('ap-next').addEventListener('click',()=>{if(currentApproach<APPROACH.length-1)setApproach(currentApproach+1)});
 
-const isMobile = () => window.innerWidth <= 680;
+// ═══════════════════════════════════════════════════════════════════════
+// SIDEBAR — 3 states: open, compact, closed
+// ═══════════════════════════════════════════════════════════════════════
+const sidebar=document.getElementById('sidebar');
+const toggleBtn=document.getElementById('sidebarToggle');
+const scrim=document.getElementById('sidebarScrim');
+let navState='open';
+const isMobile=()=>window.innerWidth<=680;
 
-function setNav(open) {
-  navOpen = open;
-  document.body.classList.toggle('nav-open', open);
-  sidebar.classList.toggle('collapsed', !open);
-  toggleBtn.setAttribute('aria-expanded', String(open));
-  // Only persist preference on desktop
-  if (!isMobile()) localStorage.setItem('navOpen', open);
+function setNav(state){
+  navState=state;
+  document.body.classList.toggle('nav-open',state==='open');
+  document.body.classList.toggle('nav-compact',state==='compact');
+  sidebar.classList.toggle('collapsed',state==='closed');
+  sidebar.classList.toggle('compact',state==='compact');
+  if(!isMobile()) localStorage.setItem('navState',state);
 }
 
-toggleBtn.addEventListener('click', () => setNav(!navOpen));
-
-// Scrim tap closes sidebar on mobile
-scrim.addEventListener('click', () => setNav(false));
-
-// On mobile, start collapsed
-if (isMobile()) {
-  setNav(false);
-} else {
-  if (localStorage.getItem('navOpen') === 'false') setNav(false);
-}
-
-// On resize: if going mobile, collapse; if going desktop, restore preference
-window.addEventListener('resize', () => {
-  if (isMobile()) {
-    if (navOpen) setNav(false);
-  } else {
-    const saved = localStorage.getItem('navOpen');
-    setNav(saved !== 'false');
-  }
+toggleBtn.addEventListener('click',()=>{
+  if(isMobile()){setNav(navState==='closed'?'open':'closed');}
+  else{const cycle={open:'compact',compact:'closed',closed:'open'};setNav(cycle[navState]);}
 });
+scrim.addEventListener('click',()=>setNav('closed'));
 
-// ═══════════════════════════════════════════════════════════════════════════════
+if(isMobile()){setNav('closed');}
+else{setNav(localStorage.getItem('navState')||'open');}
+
+window.addEventListener('resize',()=>{if(isMobile()&&navState==='open')setNav('closed');});
+
+// ═══════════════════════════════════════════════════════════════════════
 // PANEL SWITCHING
-// ─────────────────────────────────────────────────────────────────────────────
-const DOC_LABELS = { resume:'resume', cover:'cover letter', portfolio:'portfolio' };
+// ═══════════════════════════════════════════════════════════════════════
+const DOC_LABELS={resume:'resume',cover:'cover letter',approach:'my approach'};
 
-function showPanel(id) {
-  document.querySelectorAll('.doc-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+function updateFooterNav(id) {
+  document.querySelectorAll('.footer-nav-link').forEach(btn => {
+    const isCurrent = btn.dataset.panel === id;
+    btn.classList.toggle('current', isCurrent);
+    btn.disabled = isCurrent;
+  });
+}
+
+function showPanel(id){
+  document.querySelectorAll('.doc-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.getElementById('panel-'+id).classList.add('active');
   document.getElementById('nav-'+id).classList.add('active');
-  document.getElementById('pillLabel').textContent = DOC_LABELS[id];
-  window.scrollTo({top:0, behavior:'smooth'});
-  setTimeout(triggerFadeUps, 50);
-  // On mobile, close sidebar after selection
-  if (isMobile()) setNav(false);
+  document.getElementById('pillLabel').textContent=DOC_LABELS[id];
+  updateFooterNav(id);
+  window.scrollTo({top:0,behavior:'smooth'});
+  setTimeout(triggerFadeUps,50);
+  if(id==='cover') initCoverFade();
+  if(isMobile())setNav('closed');
 }
 
-// ═══════════════════════════════════════════════════════════════════════════════
-// FADE-UP
-// ─────────────────────────────────────────────────────────────────────────────
-const fadeObserver = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); fadeObserver.unobserve(e.target); }});
-}, { threshold:0.06, rootMargin:'0px 0px -30px 0px' });
+// Set initial footer nav state on load
+updateFooterNav('resume');
 
-function triggerFadeUps() {
-  document.querySelectorAll('.doc-panel.active .fade-up:not(.visible)').forEach(el => fadeObserver.observe(el));
+// ═══════════════════════════════════════════════════════════════════════
+// FADE-UP
+// ═══════════════════════════════════════════════════════════════════════
+const fadeObserver=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');fadeObserver.unobserve(e.target);}});
+},{threshold:0.06,rootMargin:'0px 0px -30px 0px'});
+
+function triggerFadeUps(){
+  document.querySelectorAll('.doc-panel.active .fade-up:not(.visible)').forEach(el=>fadeObserver.observe(el));
 }
 triggerFadeUps();
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════
+// COVER LETTER BODY FADE
+// ═══════════════════════════════════════════════════════════════════════
+
+function initCoverFade() {
+  const body = document.getElementById('coverBody');
+  if (!body) return;
+  body.classList.remove('visible');
+  // Direct timeout — observer misses when element is already in viewport
+  setTimeout(() => body.classList.add('visible'), 120);
+}
+
+// ═══════════════════════════════════════════════════════════════════════
 // STRENGTH CARDS
-// ─────────────────────────────────────────────────────────────────────────────
-document.querySelectorAll('.strength-card').forEach(card => {
-  const toggle = () => { const o=card.classList.toggle('open'); card.setAttribute('aria-expanded',String(o)); };
-  card.addEventListener('click', toggle);
-  card.addEventListener('keydown', e => { if(e.key==='Enter'||e.key===' '){ e.preventDefault(); toggle(); }});
+// ═══════════════════════════════════════════════════════════════════════
+document.querySelectorAll('.strength-card').forEach(card=>{
+  const toggle=()=>{const o=card.classList.toggle('open');card.setAttribute('aria-expanded',String(o));};
+  card.addEventListener('click',toggle);
+  card.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();toggle();}});
 });
-const cardObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.querySelectorAll('.strength-card').forEach((card,i) => {
-        card.style.opacity='0'; card.style.transform='translateY(16px)';
+const cardObserver=new IntersectionObserver((entries)=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.querySelectorAll('.strength-card').forEach((card,i)=>{
+        card.style.opacity='0';card.style.transform='translateY(16px)';
         card.style.transition=`opacity 0.32s ease ${i*0.06}s, transform 0.32s ease ${i*0.06}s, box-shadow 0.22s ease, border-color 0.22s ease`;
-        setTimeout(()=>{ card.style.opacity='1'; card.style.transform='translateY(0)'; },20);
+        setTimeout(()=>{card.style.opacity='1';card.style.transform='translateY(0)';},20);
       });
       cardObserver.unobserve(entry.target);
     }
   });
-},{ threshold:0.1 });
-const grid = document.querySelector('.strengths-grid');
-if(grid){ grid.querySelectorAll('.strength-card').forEach(c=>{c.style.opacity='0';c.style.transform='translateY(16px)';}); cardObserver.observe(grid.closest('.section')); }
+},{threshold:0.1});
+const grid=document.querySelector('.strengths-grid');
+if(grid){grid.querySelectorAll('.strength-card').forEach(c=>{c.style.opacity='0';c.style.transform='translateY(16px)';});cardObserver.observe(grid.closest('.section'));}
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════
 // JOB TOGGLES
-// ─────────────────────────────────────────────────────────────────────────────
-document.querySelectorAll('.job-toggle').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const job=btn.closest('.job'); const open=job.classList.toggle('open');
+// ═══════════════════════════════════════════════════════════════════════
+document.querySelectorAll('.job-toggle').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const job=btn.closest('.job');const open=job.classList.toggle('open');
     btn.setAttribute('aria-expanded',String(open));
   });
 });
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════
 // COPY EMAIL
-// ─────────────────────────────────────────────────────────────────────────────
-document.querySelectorAll('.contact-copy').forEach(el => {
-  el.addEventListener('click', async () => {
-    const text = el.dataset.copy;
-    if (!text) return;
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch {
-      // Fallback for older browsers
-      const ta = document.createElement('textarea');
-      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
-      document.body.appendChild(ta); ta.select();
-      document.execCommand('copy'); document.body.removeChild(ta);
-    }
-    el.classList.add('copied');
-    setTimeout(() => el.classList.remove('copied'), 1600);
+// ═══════════════════════════════════════════════════════════════════════
+document.querySelectorAll('.contact-copy').forEach(el=>{
+  el.addEventListener('click',async()=>{
+    const text=el.dataset.copy;if(!text)return;
+    try{await navigator.clipboard.writeText(text);}
+    catch{const ta=document.createElement('textarea');ta.value=text;ta.style.cssText='position:fixed;opacity:0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}
+    el.classList.add('copied');setTimeout(()=>el.classList.remove('copied'),1600);
   });
 });
 
-// ═══════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════
+// CONFETTI
+// ═══════════════════════════════════════════════════════════════════════
+const pill=document.getElementById('pill');
+const confCanvas=document.getElementById('confetti-canvas');
+const ctx=confCanvas.getContext('2d');
+let particles=[],animFrame=null,firing=false;
+const COLORS=['#EF9F27','#7F77DD','#58a6ff','#e6edf3','#BA7517','#c9d1d9'];
+function resizeCanvas(){confCanvas.width=window.innerWidth;confCanvas.height=window.innerHeight;}
+resizeCanvas();window.addEventListener('resize',resizeCanvas);
+function spawnParticles(x,y,count){
+  for(let i=0;i<count;i++){
+    const angle=Math.random()*Math.PI*2,speed=4+Math.random()*10;
+    particles.push({x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed-2-Math.random()*4,color:COLORS[Math.floor(Math.random()*COLORS.length)],size:4+Math.random()*5,rotation:Math.random()*Math.PI*2,rotSpeed:-0.15+Math.random()*0.3,shape:Math.random()>0.4?'rect':'circle',alpha:1,gravity:0.25+Math.random()*0.2,life:1,decay:0.012+Math.random()*0.01});
+  }
+}
+function drawParticle(p){ctx.save();ctx.globalAlpha=p.alpha;ctx.fillStyle=p.color;ctx.translate(p.x,p.y);ctx.rotate(p.rotation);if(p.shape==='rect')ctx.fillRect(-p.size/2,-p.size/4,p.size,p.size/2);else{ctx.beginPath();ctx.arc(0,0,p.size/2,0,Math.PI*2);ctx.fill();}ctx.restore();}
+function animate(){ctx.clearRect(0,0,confCanvas.width,confCanvas.height);particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=p.gravity;p.vx*=0.98;p.rotation+=p.rotSpeed;p.life-=p.decay;p.alpha=Math.max(0,p.life);drawParticle(p);});particles=particles.filter(p=>p.life>0);if(particles.length>0){animFrame=requestAnimationFrame(animate);}else{animFrame=null;firing=false;pill.classList.remove('firing');}}
+function fireConfetti(){if(firing)return;firing=true;pill.classList.add('firing');const rect=pill.getBoundingClientRect();const ox=rect.left+rect.width/2,oy=rect.top+rect.height/2;spawnParticles(ox,oy,60);setTimeout(()=>spawnParticles(ox,oy,40),120);setTimeout(()=>spawnParticles(ox,oy,30),260);if(animFrame)cancelAnimationFrame(animFrame);animFrame=requestAnimationFrame(animate);}
+pill.addEventListener('click',fireConfetti);
+pill.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fireConfetti();}});
+
+// ═══════════════════════════════════════════════════════════════════════
 // KEYBOARD
-// ─────────────────────────────────────────────────────────────────────────────
-document.addEventListener('keydown', e => {
-  if(['INPUT','TEXTAREA'].includes(document.activeElement.tagName)) return;
+// ═══════════════════════════════════════════════════════════════════════
+document.addEventListener('keydown',e=>{
+  if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName))return;
   switch(e.key){
-    case '1': showPanel('resume'); break;
-    case '2': showPanel('cover'); break;
-    case '3': showPanel('portfolio'); break;
-    case 'ArrowDown': case 'j': e.preventDefault(); window.scrollBy({top:120,behavior:'smooth'}); break;
-    case 'ArrowUp':   case 'k': e.preventDefault(); window.scrollBy({top:-120,behavior:'smooth'}); break;
-    case 'g': if(!e.shiftKey) window.scrollTo({top:0,behavior:'smooth'}); break;
-    case 'G': window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'}); break;
-    case 'p': window.print(); break;
-    case 'n': case 'N': setNav(!navOpen); break;
-    case 'Escape': break;
+    case '1':showPanel('resume');break;
+    case '2':showPanel('cover');break;
+    case '3':showPanel('approach');break;
+    case 'ArrowDown':case 'j':e.preventDefault();window.scrollBy({top:120,behavior:'smooth'});break;
+    case 'ArrowUp':case 'k':e.preventDefault();window.scrollBy({top:-120,behavior:'smooth'});break;
+    case 'g':if(!e.shiftKey)window.scrollTo({top:0,behavior:'smooth'});break;
+    case 'G':window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'});break;
+    case 'p':window.print();break;
+    case 'n':case 'N':
+      if(!isMobile()){const cycle={open:'compact',compact:'closed',closed:'open'};setNav(cycle[navState]);}
+      else setNav(navState==='closed'?'open':'closed');
+      break;
   }
 });
 </script>
