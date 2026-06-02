@@ -279,14 +279,14 @@ a:not(.contact):not(.nav-item):hover{text-decoration-color:var(--blue)}
   <div class="sidebar-inner">
     <div class="sidebar-wordmark"><strong>Thomas Gage</strong><br>Director of strategy</div>
     <div class="sidebar-section-label">Documents</div>
-    <button class="nav-item active" onclick="showPanel('resume')" id="nav-resume">
-      <div class="nav-dot nav-dot-resume"></div>
-      <span class="nav-item-label">Resume</span>
-      <span class="nav-key">1</span>
-    </button>
     <button class="nav-item" onclick="showPanel('cover')" id="nav-cover">
       <div class="nav-dot nav-dot-cover"></div>
       <span class="nav-item-label">Cover letter</span>
+      <span class="nav-key">1</span>
+    </button>
+    <button class="nav-item" onclick="showPanel('resume')" id="nav-resume">
+      <div class="nav-dot nav-dot-resume"></div>
+      <span class="nav-item-label">Resume</span>
       <span class="nav-key">2</span>
     </button>
     <button class="nav-item" onclick="showPanel('approach')" id="nav-approach">
@@ -312,7 +312,7 @@ a:not(.contact):not(.nav-item):hover{text-decoration-color:var(--blue)}
 <main class="main" id="main">
 
   <!-- ── RESUME ─────────────────────────────────────────────────────────── -->
-  <div class="doc-panel active" id="panel-resume">
+  <div class="doc-panel" id="panel-resume">
     <div class="fade-up" style="transition-delay:0.04s">
       <div class="eyebrow"><span class="eyebrow-role">DIRECTOR · </span><span class="eyebrow-dept">STRATEGY, MARKETING & COMMUNICATIONS</span></div>
       <div class="name" id="content-name">Thomas Gage</div>
@@ -391,11 +391,11 @@ a:not(.contact):not(.nav-item):hover{text-decoration-color:var(--blue)}
   </div>
 
   <!-- ── COVER LETTER ──────────────────────────────────────────────────── -->
-  <div class="doc-panel" id="panel-cover">
+  <div class="doc-panel active" id="panel-cover">
     <div class="fade-up" style="transition-delay:0.04s">
       <div class="cover-meta">
-        <div class="cover-meta-date">June 2026</div>
-        <div class="cover-addressee"><strong>Hiring Committee</strong><br>Arts Umbrella<br>Director, Marketing and Communications</div>
+        <div class="cover-meta-date" id="cover-date">June 2026</div>
+        <div class="cover-addressee"><strong>Hiring Committee</strong><br><span id="cover-org">Arts Umbrella</span><br><span id="cover-role-applying">Director, Marketing and Communications</span></div>
         <div class="cover-salutation">Dear hiring committee,</div>
       </div>
       <div class="cover-body" id="coverBody">
@@ -413,7 +413,7 @@ a:not(.contact):not(.nav-item):hover{text-decoration-color:var(--blue)}
       <div class="cover-sign">
         <div class="cover-sign-close">Sincerely,</div>
         <div class="cover-sign-name">Thomas Gage</div>
-        <div class="cover-sign-title">Director of Strategy</div>
+        <div class="cover-sign-title" id="cover-sign-title-el">Director of Strategy</div>
       </div>
     </div>
     <div class="footer-note fade-up" style="transition-delay:0.2s;margin-top:2rem">
@@ -473,15 +473,16 @@ a:not(.contact):not(.nav-item):hover{text-decoration-color:var(--blue)}
 // ─────────────────────────────────────────────────────────────────────
 // Paste your published Google Sheet CSV URL here after setup.
 // File → Share → Publish to web → Sheet1 → CSV → Copy link
-const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS7m7_1Jnn0m7qxGIw1g1w9W8CytHwj0eh9K6cU-91VXMH-tUvV681exoXXyZ-EBUBVIty_vztn37S5/pub?gid=1970372070&single=true&output=csv'; // ← paste between the quotes when ready
+const SHEET_URL = 'https://docs.google.com/spreadsheets/d/1_9Ynvqmq_oNkwM3oikDcP7WCu2FsOGEcwYh5zTEkxXo/edit?gid=1970372070#gid=1970372070'; // ← paste between the quotes when ready
 
 async function loadFromSheet() {
   if (!SHEET_URL) return;
   try {
     const res = await fetch(SHEET_URL);
     const csv = await res.text();
+
+    // Parse CSV — handle quoted values containing commas
     const rows = csv.trim().split('\n').map(r => {
-      // Handle quoted CSV values properly
       const cols = []; let cur = ''; let inQ = false;
       for (const ch of r) {
         if (ch === '"') { inQ = !inQ; }
@@ -490,26 +491,82 @@ async function loadFromSheet() {
       }
       cols.push(cur.trim()); return cols;
     });
+
     const data = {};
-    rows.forEach(([key, val]) => { if (key) data[key.toLowerCase()] = (val||'').trim(); });
+    rows.forEach(([key, val]) => {
+      if (key && key.trim() && !key.startsWith(',')) {
+        data[key.toLowerCase().trim()] = (val || '').trim();
+      }
+    });
 
-    const set = (id, val) => { const el=document.getElementById(id); if(el&&val) el.textContent=val; };
-    set('content-name',   data.name);
-    set('content-tagline',data.tagline);
-    set('content-profile',data.profile);
-    set('content-tools',  data.tools);
-    set('content-arts',   data.arts);
+    // ── Helper: set text content by element ID ──────────────────────
+    const set = (id, val) => {
+      const el = document.getElementById(id);
+      if (el && val) el.textContent = val;
+    };
 
-    // Email copy
+    // ── RESUME ──────────────────────────────────────────────────────
+    set('content-name',    data.name);
+    set('content-tagline', data.tagline);
+    set('content-profile', data.profile);
+    set('content-tools',   data.tools);
+    set('content-arts',    data.arts);
+
     if (data.email) {
       const em = document.querySelector('[data-copy]');
-      if (em) { em.dataset.copy = data.email; em.querySelector('.contact-label').textContent = data.email; }
+      if (em) {
+        em.dataset.copy = data.email;
+        const lbl = em.querySelector('.contact-label');
+        if (lbl) lbl.textContent = data.email;
+      }
     }
-    // LinkedIn
     if (data.linkedin) {
       const li = document.querySelector('.contact-link');
-      if (li) { li.href = 'https://'+data.linkedin; li.childNodes[0].textContent = data.linkedin+' '; }
+      if (li) {
+        li.href = 'https://' + data.linkedin;
+        // Update text node (first child) only, leave the SVG icon intact
+        const textNode = [...li.childNodes].find(n => n.nodeType === 3);
+        if (textNode) textNode.textContent = data.linkedin + ' ';
+      }
     }
+
+    // ── COVER LETTER ─────────────────────────────────────────────────
+    const setEl = (id, val) => {
+      const el = document.getElementById(id);
+      if (el && val) el.innerHTML = val;
+    };
+    if (data.cover_date)         set('cover-date',         data.cover_date);
+    if (data.cover_org)          set('cover-org',          data.cover_org);
+    if (data.cover_role_applying)set('cover-role-applying',data.cover_role_applying);
+    if (data.cover_sign_title)   set('cover-sign-title-el',data.cover_sign_title);
+
+    // Paragraphs — replace text of each <p> by index
+    const coverBody = document.getElementById('coverBody');
+    if (coverBody) {
+      const paras = coverBody.querySelectorAll('p');
+      for (let i = 1; i <= 10; i++) {
+        const val = data['cover_p'+i];
+        const para = paras[i-1];
+        if (val && para) para.textContent = val;
+      }
+    }
+
+    // ── MY APPROACH ───────────────────────────────────────────────────
+    // Rebuild APPROACH array from sheet data, then re-render current section
+    for (let i = 0; i <= 8; i++) {
+      const num = String(i).padStart(2, '0');
+      const titleKey = 'approach_' + num + '_title';
+      const bodyKey  = 'approach_' + num + '_body';
+      if (data[titleKey]) APPROACH[i].title = data[titleKey];
+      if (data[bodyKey]) {
+        // Split on double space or  — to create paragraph breaks
+        const parts = data[bodyKey].split(/\s{2,}/);
+        APPROACH[i].body = parts.map(p => `<p>${p.trim()}</p>`).join('');
+      }
+    }
+    // Re-render current approach section with updated data
+    setApproach(currentApproach);
+
   } catch(e) {
     console.log('Sheet not loaded — using HTML defaults.', e);
   }
@@ -606,7 +663,7 @@ window.addEventListener('resize',()=>{if(isMobile()&&navState==='open')setNav('c
 // ═══════════════════════════════════════════════════════════════════════
 // PANEL SWITCHING
 // ═══════════════════════════════════════════════════════════════════════
-const DOC_LABELS={resume:'resume',cover:'cover letter',approach:'my approach'};
+const DOC_LABELS={cover:'cover letter',resume:'resume',approach:'my approach'};
 
 function updateFooterNav(id) {
   document.querySelectorAll('.footer-nav-link').forEach(btn => {
@@ -629,8 +686,11 @@ function showPanel(id){
   if(isMobile())setNav('closed');
 }
 
-// Set initial footer nav state on load
-updateFooterNav('resume');
+// Set initial states on load
+updateFooterNav('cover');
+document.getElementById('nav-cover').classList.add('active');
+document.getElementById('pillLabel').textContent = 'cover letter';
+initCoverFade();
 
 // ═══════════════════════════════════════════════════════════════════════
 // FADE-UP
@@ -729,8 +789,8 @@ pill.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDe
 document.addEventListener('keydown',e=>{
   if(['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName))return;
   switch(e.key){
-    case '1':showPanel('resume');break;
-    case '2':showPanel('cover');break;
+    case '1':showPanel('cover');break;
+    case '2':showPanel('resume');break;
     case '3':showPanel('approach');break;
     case 'ArrowDown':case 'j':e.preventDefault();window.scrollBy({top:120,behavior:'smooth'});break;
     case 'ArrowUp':case 'k':e.preventDefault();window.scrollBy({top:-120,behavior:'smooth'});break;
